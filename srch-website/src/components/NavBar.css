@@ -1,0 +1,28 @@
+/* Navbar styles */
+.navigation-menu {
+  width: 250px;
+  height: 100vh;  /* Make navbar full height of the screen */
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  border-right: 2px solid #444;  /* Add vertical separator line */
+}
+.navigation-menu-list {
+  list-style: none;
+  padding: 0;
+}
+
+
+.navigation-menu a {
+  /* color: white; */
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 20px;
+  display: block;
+  transition: 0.3s;
+}
+
+.navigation-menu a:hover {
+  background: #444;
+  border-radius: 5px;
+}

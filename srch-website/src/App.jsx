@@ -6,10 +6,12 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import './App.css'
 import Home from './pages/Home'
 import Docs from "./pages/Docs.jsx";
+import NavBar from './components/NavBar.jsx'
 
 function App() {
   return (
     <Router basename="/srch-s25/">
+      <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/docs" element={<Docs />} />
