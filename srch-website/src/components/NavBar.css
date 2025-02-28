@@ -1,8 +1,8 @@
 /* Navbar styles */
 .navigation-menu {
-  width: 250px;
+  width: 200px;
   height: 100vh;  /* Make navbar full height of the screen */
-  padding: 20px;
+  padding: 10px;
   position: sticky;
   top: 0;
   border-right: 2px solid #444;  /* Add vertical separator line */
@@ -11,18 +11,26 @@
   list-style: none;
   padding: 0;
 }
+.navigation-menu-list li {
+  padding-left: 10px; /* Indent for nested items */
+}
+
+.navigation-menu-list li ul {
+  font-size: 0.9em;
+  padding-left: 20px; /* Additional indent for deeper levels */
+}
 
 
 .navigation-menu a {
-  /* color: white; */
+  color: #000000;
   text-decoration: none;
   font-weight: bold;
-  padding: 10px 20px;
+  padding: 2px 4px;
   display: block;
-  transition: 0.3s;
+  /* transition: 0.3s; */
 }
 
 .navigation-menu a:hover {
-  background: #444;
+  background: #EFEBF3;
   border-radius: 5px;
 }
