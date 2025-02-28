@@ -3,12 +3,12 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import Demo from './components/Demo.jsx'
 import './App.css'
+import ResizableDrawer from './components/Drawer.jsx'
 
 function App() {
   return (
     <>
       <div>
-        <Demo/>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -16,6 +16,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+      <ResizableDrawer markdownPath="README.md"/>
       <h1>This is the entry point!</h1>
     </>
   )
