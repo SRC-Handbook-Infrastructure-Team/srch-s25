@@ -1,13 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>Markdown Knowledge Base</title>
   </head>
   <body>
+    <!--
+      Skip link: helps keyboard/screen-reader users jump directly to the main content.
+      Positioned off-screen by default; appears when focused.
+    -->
+    <a
+      href="#main-content"
+      style="
+        position: absolute;
+        left: -9999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      "
+      onfocus="this.style.position='static'; this.style.width='auto'; this.style.height='auto';"
+      onblur="this.style.position='absolute'; this.style.width='1px'; this.style.height='1px';"
+    >
+      Skip to Main Content
+    </a>
+
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
