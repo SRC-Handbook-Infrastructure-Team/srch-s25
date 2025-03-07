@@ -98,7 +98,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   };
 
   return (
-    <Flex direction="column" minH="100vh">
+    <Flex direction="column" minH="100vh" overflow="hidden">
       <Header
         toggleSidebar={toggleMobileSidebar}
         toggleDesktopSidebarCollapse={() =>
@@ -113,14 +113,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         id="main-content"
         flex="1"
         position="relative"
+        h="calc(100vh - 60px)"
         overflow="hidden"
       >
         {/* Desktop sidebar */}
         <Box
           display={{ base: "none", md: "block" }}
-          position="relative"
+          position="fixed"
           left={0}
-          top={0}
+          top="60px"
           h="calc(100vh - 60px)"
           w={sidebarWidth}
           transition="width 0.2s ease"
@@ -128,8 +129,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           borderRightWidth={isSidebarCollapsed ? "0px" : "1px"}
           borderRightColor={colorMode === "dark" ? "gray.700" : "gray.200"}
           overflowY="auto"
-          style={{ marginTop: "60px" }}
           zIndex="docked"
+          shadow="sm"
         >
           {!isSidebarCollapsed && (
             <>
@@ -140,11 +141,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 top={0}
                 right={0}
                 bottom={0}
-                w="12px"
+                w="5px"
                 cursor="col-resize"
                 zIndex={9999}
                 bg="transparent"
-                _hover={{ bg: colorMode === "dark" ? "blue.300" : "blue.100" }}
+                _hover={{ bg: colorMode === "dark" ? "blue.500" : "blue.300" }}
+                _active={{ bg: colorMode === "dark" ? "blue.600" : "blue.400" }}
                 onMouseDown={handleSidebarResizeMouseDown}
                 role="separator"
                 aria-orientation="vertical"
@@ -167,7 +169,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           transition="margin-left 0.2s ease"
           p={{ base: 4, md: 6 }}
           bg={colorMode === "dark" ? "gray.900" : "gray.50"}
-          minH="calc(100vh - 60px)"
+          h="full"
+          overflowY="auto"
           position="relative"
         >
           {/* We center the content with maxW from user settings */}
@@ -175,11 +178,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             maxW={contentMaxWidth}
             w="100%"
             mx="auto"
+            my={4}
             bg={colorMode === "dark" ? "gray.800" : "white"}
             borderRadius="lg"
             boxShadow="md"
             p={{ base: 4, md: 6 }}
             overflow="auto"
+            transition="all 0.2s ease"
           >
             {children}
           </Box>
