@@ -1,6 +1,35 @@
 import { MarkdownFile, Category } from "@/context/MarkdownContext";
 
-// This function loads all markdown files from the filesystem
+// Constants for improved code organization
+const DEFAULT_CATEGORY_ORDER = 100;
+const CATEGORY_PRIORITIES: Record<string, number> = {
+  introduction: 1,
+  "getting-started": 2,
+  basics: 3,
+  "core-concepts": 4,
+  "algorithmic-fairness": 5,
+  "algorithmic-justice": 6,
+  "fairness-metrics": 7,
+  applications: 8,
+  advanced: 9,
+  "case-studies": 10,
+  appendix: 11,
+};
+
+// Interface for frontmatter metadata
+interface FileMetadata {
+  category?: string;
+  categoryName?: string;
+  categoryOrder?: number;
+  order?: number;
+  title?: string;
+  [key: string]: any;
+}
+
+/**
+ * Loads all markdown files from the filesystem
+ * @returns Promise with main files, drawer files, and categories
+ */
 export async function loadMarkdownFiles(): Promise<{
   mainFiles: MarkdownFile[];
   drawerFiles: MarkdownFile[];
@@ -22,72 +51,26 @@ export async function loadMarkdownFiles(): Promise<{
     // Process main files
     const mainFiles: MarkdownFile[] = await Promise.all(
       Object.entries(mainFilesModules).map(async ([path, module]) => {
-        const content = (module as any).default as string;
-        const id = path.split("/").pop()?.replace(".md", "") || "";
-
-        // Extract and remove frontmatter
-        const { cleanContent, metadata } = extractFrontmatter(content);
-
-        // Get title from first heading or use filename
-        const title = extractTitle(cleanContent) || formatTitle(id);
-
-        // Determine category from metadata or infer from content
-        const categoryInfo = determineCategoryInfo(metadata, id);
-
-        // Track this category if it's new
-        if (!categoriesMap.has(categoryInfo.id)) {
-          categoriesMap.set(categoryInfo.id, {
-            id: categoryInfo.id,
-            name: categoryInfo.name,
-            order: categoryInfo.order,
-          });
+        try {
+          return processMarkdownFile(path, module, "main", categoriesMap);
+        } catch (error) {
+          console.error(`Error processing main file ${path}:`, error);
+          // Return a placeholder file with error information
+          return createErrorFile(path, "main", error);
         }
-
-        return {
-          id,
-          title,
-          path,
-          category: categoryInfo.id,
-          content: cleanContent,
-          type: "main" as const,
-          order: metadata.order || categoryInfo.fileOrder || 1,
-        };
       })
     );
 
     // Process drawer files
     const drawerFiles: MarkdownFile[] = await Promise.all(
       Object.entries(drawerFilesModules).map(async ([path, module]) => {
-        const content = (module as any).default as string;
-        const id = path.split("/").pop()?.replace(".md", "") || "";
-
-        // Extract and remove frontmatter
-        const { cleanContent, metadata } = extractFrontmatter(content);
-
-        // Get title from first heading or use filename
-        const title = extractTitle(cleanContent) || formatTitle(id);
-
-        // Determine category from metadata or infer from content
-        const categoryInfo = determineCategoryInfo(metadata, id);
-
-        // Track this category if it's new
-        if (!categoriesMap.has(categoryInfo.id)) {
-          categoriesMap.set(categoryInfo.id, {
-            id: categoryInfo.id,
-            name: categoryInfo.name,
-            order: categoryInfo.order,
-          });
+        try {
+          return processMarkdownFile(path, module, "drawer", categoriesMap);
+        } catch (error) {
+          console.error(`Error processing drawer file ${path}:`, error);
+          // Return a placeholder file with error information
+          return createErrorFile(path, "drawer", error);
         }
-
-        return {
-          id,
-          title,
-          path,
-          category: categoryInfo.id,
-          content: cleanContent,
-          type: "drawer" as const,
-          order: metadata.order || categoryInfo.fileOrder || 1,
-        };
       })
     );
 
@@ -96,9 +79,18 @@ export async function loadMarkdownFiles(): Promise<{
       (a, b) => a.order - b.order
     );
 
+    // Remove null/undefined entries and sort files
+    const validMainFiles = mainFiles
+      .filter(Boolean)
+      .sort((a, b) => (a.order || 999) - (b.order || 999));
+    
+    const validDrawerFiles = drawerFiles
+      .filter(Boolean)
+      .sort((a, b) => (a.order || 999) - (b.order || 999));
+
     return {
-      mainFiles: mainFiles.sort((a, b) => a.order! - b.order!),
-      drawerFiles: drawerFiles.sort((a, b) => a.order! - b.order!),
+      mainFiles: validMainFiles,
+      drawerFiles: validDrawerFiles,
       categories,
     };
   } catch (error) {
@@ -107,11 +99,87 @@ export async function loadMarkdownFiles(): Promise<{
   }
 }
 
-// Helper function to extract and remove frontmatter
+/**
+ * Process a single markdown file and extract its content and metadata
+ */
+function processMarkdownFile(
+  path: string, 
+  module: any, 
+  type: "main" | "drawer",
+  categoriesMap: Map<string, Category>
+): MarkdownFile {
+  const content = (module as any).default as string;
+  const id = path.split("/").pop()?.replace(".md", "") || generateRandomId();
+
+  // Extract and remove frontmatter
+  const { cleanContent, metadata } = extractFrontmatter(content);
+
+  // Get title from metadata, first heading, or formatted id
+  const title = metadata.title || extractTitle(cleanContent) || formatTitle(id);
+
+  // Determine category from metadata or infer from content
+  const categoryInfo = determineCategoryInfo(metadata, id);
+
+  // Track this category if it's new
+  if (!categoriesMap.has(categoryInfo.id)) {
+    categoriesMap.set(categoryInfo.id, {
+      id: categoryInfo.id,
+      name: categoryInfo.name,
+      order: categoryInfo.order,
+    });
+  }
+
+  return {
+    id,
+    title,
+    path,
+    category: categoryInfo.id,
+    content: cleanContent,
+    type,
+    order: metadata.order || categoryInfo.fileOrder || 999,
+  };
+}
+
+/**
+ * Creates an error placeholder file when a file fails to load
+ */
+function createErrorFile(
+  path: string,
+  type: "main" | "drawer",
+  error: any
+): MarkdownFile {
+  const id = path.split("/").pop()?.replace(".md", "") || generateRandomId();
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  
+  return {
+    id,
+    title: `Error: ${id}`,
+    path,
+    category: "errors",
+    content: `# Error Loading File\n\nThere was an error loading this file:\n\n\`\`\`\n${errorMessage}\n\`\`\`\n\nPath: ${path}`,
+    type,
+    order: 9999, // Put error files at the end
+  };
+}
+
+/**
+ * Generate a random ID for files missing an ID
+ */
+function generateRandomId(): string {
+  return `file-${Math.random().toString(36).substr(2, 9)}`;
+}
+
+/**
+ * Helper function to extract and remove frontmatter
+ */
 function extractFrontmatter(content: string): {
   cleanContent: string;
-  metadata: Record<string, any>;
+  metadata: FileMetadata;
 } {
+  if (!content) {
+    return { cleanContent: "", metadata: {} };
+  }
+
   const frontmatterRegex = /^---\s+([\s\S]*?)\s+---/;
   const match = content.match(frontmatterRegex);
 
@@ -123,7 +191,7 @@ function extractFrontmatter(content: string): {
   const cleanContent = content.replace(frontmatterRegex, "").trim();
 
   // Parse frontmatter into metadata object
-  const metadata: Record<string, any> = {};
+  const metadata: FileMetadata = {};
   const frontmatter = match[1];
 
   frontmatter.split("\n").forEach((line) => {
@@ -135,6 +203,10 @@ function extractFrontmatter(content: string): {
       // Try to convert numeric values
       if (/^\d+$/.test(value)) {
         metadata[key] = parseInt(value, 10);
+      } else if (value === "true") {
+        metadata[key] = true;
+      } else if (value === "false") {
+        metadata[key] = false;
       } else {
         metadata[key] = value;
       }
@@ -144,23 +216,31 @@ function extractFrontmatter(content: string): {
   return { cleanContent, metadata };
 }
 
-// Helper function to extract title from the first H1 heading
+/**
+ * Helper function to extract title from the first H1 heading
+ */
 function extractTitle(content: string): string | null {
+  if (!content) return null;
   const titleMatch = content.match(/^# (.*?)$/m);
   return titleMatch ? titleMatch[1] : null;
 }
 
-// Helper function to format a file ID into a readable title
+/**
+ * Helper function to format a file ID into a readable title
+ */
 function formatTitle(id: string): string {
+  if (!id) return "Untitled";
   return id
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
 
-// Helper function to determine category information from metadata or infer it
+/**
+ * Helper function to determine category information from metadata or infer it
+ */
 function determineCategoryInfo(
-  metadata: Record<string, any>,
+  metadata: FileMetadata,
   id: string
 ): {
   id: string;
@@ -182,33 +262,31 @@ function determineCategoryInfo(
   return inferCategoryFromId(id);
 }
 
-// Helper function to infer category order
+/**
+ * Helper function to infer category order
+ */
 function inferCategoryOrder(categoryId: string): number {
-  // Define a priority order for common categories
-  const priorityOrder: Record<string, number> = {
-    introduction: 1,
-    "getting-started": 2,
-    basics: 3,
-    "core-concepts": 4,
-    "algorithmic-fairness": 5,
-    "algorithmic-justice": 6,
-    "fairness-metrics": 7,
-    applications: 8,
-    advanced: 9,
-    "case-studies": 10,
-    appendix: 11,
-  };
-
-  return priorityOrder[categoryId] || 100; // Default to high number if unknown
+  if (!categoryId) return DEFAULT_CATEGORY_ORDER;
+  return CATEGORY_PRIORITIES[categoryId] || DEFAULT_CATEGORY_ORDER;
 }
 
-// Helper function to infer category from file ID
+/**
+ * Helper function to infer category from file ID
+ */
 function inferCategoryFromId(id: string): {
   id: string;
   name: string;
   order: number;
   fileOrder?: number;
 } {
+  if (!id) {
+    return {
+      id: "uncategorized",
+      name: "Uncategorized",
+      order: DEFAULT_CATEGORY_ORDER,
+    };
+  }
+
   // Simple mapping based on filename
   if (id.includes("fairness-metric") || id.includes("equalized-odds")) {
     return {

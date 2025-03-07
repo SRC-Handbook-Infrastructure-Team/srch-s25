@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -27,6 +27,10 @@ import {
   TableContainer,
   Button,
   useColorMode,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  useToast,
 } from "@chakra-ui/react";
 import { useMarkdown } from "@/context/MarkdownContext";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
@@ -38,31 +42,99 @@ interface MarkdownRendererProps {
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   const { colorMode } = useColorMode();
   const { loadFile, openDrawer, getDrawerFileById } = useMarkdown();
+  const toast = useToast();
+  const [renderError, setRenderError] = useState<string | null>(null);
 
-  // Replace custom link syntax with <button> placeholders
-  const findAndReplaceButtons = (text: string): string => {
-    // [sidebar:Button Text](file-id)
-    const sidebarRegex = /\[sidebar:(.*?)\]\((.*?)\)/g;
-    let newText = text.replace(sidebarRegex, (_, btnLabel, fileId) => {
-      return `<button type="sidebar" data-id="${fileId}">${btnLabel}</button>`;
-    });
+  // Enhanced button finding and replacement with more robust regex
+  const findAndReplaceButtons = useCallback((text: string): string => {
+    if (!text) return "";
+    
+    try {
+      // More robust pattern matching with better error handling
+      // [sidebar:Button Text](file-id)
+      const sidebarRegex = /\[sidebar:(.*?)\]\(([\w-]+)\)/g;
+      let newText = text.replace(sidebarRegex, (match, btnLabel, fileId) => {
+        if (!btnLabel.trim() || !fileId.trim()) {
+          console.warn(`Invalid sidebar button format: ${match}`);
+          return match; // Keep original if invalid
+        }
+        return `<button type="sidebar" data-id="${fileId.trim()}">${btnLabel.trim()}</button>`;
+      });
 
-    // [nav:Button Text](file-id)
-    const navRegex = /\[nav:(.*?)\]\((.*?)\)/g;
-    newText = newText.replace(navRegex, (_, btnLabel, fileId) => {
-      return `<button type="nav" data-id="${fileId}">${btnLabel}</button>`;
-    });
+      // [nav:Button Text](file-id)
+      const navRegex = /\[nav:(.*?)\]\(([\w-]+)\)/g;
+      newText = newText.replace(navRegex, (match, btnLabel, fileId) => {
+        if (!btnLabel.trim() || !fileId.trim()) {
+          console.warn(`Invalid navigation button format: ${match}`);
+          return match; // Keep original if invalid
+        }
+        return `<button type="nav" data-id="${fileId.trim()}">${btnLabel.trim()}</button>`;
+      });
 
-    return newText;
-  };
+      return newText;
+    } catch (error) {
+      console.error("Error processing custom buttons:", error);
+      setRenderError("Failed to process custom button syntax.");
+      return text; // Return original text on error
+    }
+  }, []);
 
-  // Process the content for custom syntax
+  // Process the content for custom syntax with error handling
   const processedContent = useMemo(() => {
-    return findAndReplaceButtons(content);
-  }, [content]);
+    setRenderError(null); // Reset any previous errors
+    if (!content) return "";
+    try {
+      return findAndReplaceButtons(content);
+    } catch (error) {
+      console.error("Error in content processing:", error);
+      setRenderError("Failed to process markdown content.");
+      return content; // Return original content on error
+    }
+  }, [content, findAndReplaceButtons]);
+
+  // Handle button click with error handling
+  const handleButtonClick = useCallback((type: string, fileId: string, children: React.ReactNode) => {
+    try {
+      if (type === "sidebar") {
+        const drawerFile = getDrawerFileById(fileId);
+        if (drawerFile) {
+          openDrawer(drawerFile.content);
+        } else {
+          console.error(`Drawer content for ${fileId} not found`);
+          toast({
+            title: "Content not found",
+            description: `The sidebar content for "${fileId}" could not be found.`,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      } else if (type === "nav") {
+        loadFile(fileId).catch(error => {
+          console.error(`Error loading file ${fileId}:`, error);
+          toast({
+            title: "Navigation failed",
+            description: `Failed to navigate to "${fileId}".`,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        });
+      }
+    } catch (error) {
+      console.error("Error handling button click:", error);
+      toast({
+        title: "Action failed",
+        description: "An unexpected error occurred. Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [getDrawerFileById, openDrawer, loadFile, toast]);
 
   // Chakra-friendly overrides for markdown components
-  const components = {
+  const components = useMemo(() => ({
     p: (props: any) => <Text mb={4} lineHeight="tall" {...props} />,
     em: (props: any) => <Text as="em" {...props} />,
     blockquote: (props: any) => (
@@ -132,6 +204,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
         borderRadius="md"
         maxW="100%"
         alt={props.alt || ""}
+        loading="lazy" // Add lazy loading for images
+        fallbackSrc="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" // Tiny 1x1 transparent placeholder
         {...props}
       />
     ),
@@ -149,9 +223,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     button: (props: any) => {
       const { type, "data-id": fileId, children } = props;
 
+      if (!type || !fileId) {
+        return <Button isDisabled>{children || "Invalid Button"}</Button>;
+      }
+
       if (type === "sidebar") {
         // Drawer link
-        const drawerFile = getDrawerFileById(fileId);
         return (
           <Button
             colorScheme="blue"
@@ -165,13 +242,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
             fontSize="sm"
             fontWeight="normal"
             lineHeight="normal"
-            onClick={() => {
-              if (drawerFile) {
-                openDrawer(drawerFile.content);
-              } else {
-                console.error(`Drawer content for ${fileId} not found`);
-              }
-            }}
+            onClick={() => handleButtonClick("sidebar", fileId, children)}
           >
             {children}
           </Button>
@@ -185,7 +256,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
             colorScheme="teal"
             size="sm"
             mx={1}
-            onClick={() => loadFile(fileId)}
+            onClick={() => handleButtonClick("nav", fileId, children)}
           >
             {children}
           </Button>
@@ -197,7 +268,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     },
 
     table: (props: any) => (
-      <TableContainer mb={4} mt={4}>
+      <TableContainer mb={4} mt={4} overflowX="auto">
         <Table variant="simple" size="sm" {...props} />
       </TableContainer>
     ),
@@ -206,14 +277,26 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     tr: (props: any) => <Tr {...props} />,
     td: (props: any) => <Td {...props} />,
     th: (props: any) => <Th {...props} />,
-  };
+  }), [colorMode, handleButtonClick]);
 
+  // If there's an error in rendering, show it
+  if (renderError) {
+    return (
+      <Alert status="error" variant="left-accent" my={4}>
+        <AlertIcon />
+        <AlertTitle>{renderError}</AlertTitle>
+      </Alert>
+    );
+  }
+
+  // Render with error boundary
   return (
     <Box>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={components as any}
+        skipHtml={false}
       >
         {processedContent}
       </ReactMarkdown>
@@ -221,4 +304,4 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
   );
 };
 
-export default MarkdownRenderer;
+export default React.memo(MarkdownRenderer); // Memoize the component for better performance

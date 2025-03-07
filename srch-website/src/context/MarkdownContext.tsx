@@ -4,8 +4,10 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from "react";
 import { loadMarkdownFiles } from "@/utils/fileLoader";
+import { useToast } from "@chakra-ui/react";
 
 // Define types for our markdown files
 export interface MarkdownFile {
@@ -36,6 +38,8 @@ interface MarkdownContextProps {
   isDrawerOpen: boolean;
   isLoading: boolean;
   getDrawerFileById: (id: string) => MarkdownFile | undefined;
+  error: string | null;
+  refreshFiles: () => Promise<void>;
 }
 
 const MarkdownContext = createContext<MarkdownContextProps | undefined>(
@@ -52,41 +56,76 @@ export const MarkdownProvider: React.FC<{ children: ReactNode }> = ({
   const [drawerContent, setDrawerContent] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   // Load all markdown files on initialization
-  useEffect(() => {
-    const loadFiles = async () => {
-      try {
-        setIsLoading(true);
+  const loadFiles = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        // Load files from the filesystem using the fileLoader utility
-        const { mainFiles, drawerFiles, categories } =
-          await loadMarkdownFiles();
+      // Load files from the filesystem using the fileLoader utility
+      const { mainFiles, drawerFiles, categories } =
+        await loadMarkdownFiles();
 
-        setMainFiles(mainFiles);
-        setDrawerFiles(drawerFiles);
-        setCategories(categories);
-
-        // Set the default file
-        const defaultFile =
-          mainFiles.find((file) => file.id === "algorithmic-fairness") ||
-          (mainFiles.length > 0 ? mainFiles[0] : null);
-
-        if (defaultFile) {
-          setCurrentFile(defaultFile);
-        }
-
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Failed to load markdown files:", error);
-        setIsLoading(false);
+      if (mainFiles.length === 0) {
+        setError("No main content files found.");
+        toast({
+          title: "Content loading warning",
+          description: "No main content files were found. The application may not work correctly.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
       }
-    };
 
+      setMainFiles(mainFiles);
+      setDrawerFiles(drawerFiles);
+      setCategories(categories);
+
+      // Set the default file
+      const defaultFile =
+        mainFiles.find((file) => file.id === "algorithmic-fairness") ||
+        (mainFiles.length > 0 ? mainFiles[0] : null);
+
+      if (defaultFile) {
+        setCurrentFile(defaultFile);
+      } else if (mainFiles.length === 0) {
+        setError("No default file found. Please add markdown content to the application.");
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Failed to load markdown files:", error);
+      setError("Failed to load content. Please check the console for details.");
+      setIsLoading(false);
+      toast({
+        title: "Error loading content",
+        description: "Failed to load markdown files. Please try refreshing the page.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [toast]);
+
+  useEffect(() => {
     loadFiles();
-  }, []);
+  }, [loadFiles]);
 
   const loadFile = async (fileId: string) => {
+    if (!fileId) {
+      toast({
+        title: "Navigation error",
+        description: "Invalid file ID provided.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const file = mainFiles.find((f) => f.id === fileId);
@@ -94,30 +133,67 @@ export const MarkdownProvider: React.FC<{ children: ReactNode }> = ({
         setCurrentFile(file);
       } else {
         console.error(`File with ID ${fileId} not found`);
+        toast({
+          title: "File not found",
+          description: `The file "${fileId}" could not be found.`,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (error) {
       console.error(`Failed to load file with ID ${fileId}:`, error);
+      toast({
+        title: "Error loading file",
+        description: "An unexpected error occurred while loading the file.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getDrawerFileById = (id: string) => {
+  const getDrawerFileById = useCallback((id: string) => {
+    if (!id) return undefined;
     return drawerFiles.find((file) => file.id === id);
-  };
+  }, [drawerFiles]);
 
-  const openDrawer = (content: string) => {
+  const openDrawer = useCallback((content: string) => {
+    if (!content) {
+      toast({
+        title: "Warning",
+        description: "Attempted to open drawer with empty content.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
     setDrawerContent(content);
     setIsDrawerOpen(true);
-  };
+  }, [toast]);
 
-  const closeDrawer = () => {
+  const closeDrawer = useCallback(() => {
     setIsDrawerOpen(false);
     // We'll keep the content in state until the drawer is closed for a smooth transition
     setTimeout(() => {
       setDrawerContent(null);
     }, 300);
-  };
+  }, []);
+
+  // Function to manually refresh files (useful for development or if files change)
+  const refreshFiles = useCallback(async () => {
+    await loadFiles();
+    toast({
+      title: "Content refreshed",
+      description: "All content has been reloaded.",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  }, [loadFiles, toast]);
 
   return (
     <MarkdownContext.Provider
@@ -133,6 +209,8 @@ export const MarkdownProvider: React.FC<{ children: ReactNode }> = ({
         isDrawerOpen,
         isLoading,
         getDrawerFileById,
+        error,
+        refreshFiles,
       }}
     >
       {children}
