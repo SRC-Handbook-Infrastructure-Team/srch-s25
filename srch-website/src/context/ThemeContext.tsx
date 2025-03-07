@@ -12,10 +12,20 @@ import {
   // We import defaultTheme if needed, or we can skip it
 } from "@chakra-ui/react";
 
+// Font family options for accessibility
+export type FontFamily = 
+  | 'system' 
+  | 'inter' 
+  | 'atkinson' 
+  | 'openDyslexic' 
+  | 'roboto' 
+  | 'sourceSansPro';
+
 export interface ThemeOptions {
   colorMode: "light" | "dark";
   primaryColor: string;
   fontSize: "sm" | "md" | "lg";
+  fontFamily: FontFamily;
   sidebarWidth: string;
   contentWidth: string;
   drawerWidth: string;
@@ -43,6 +53,7 @@ const defaultThemeOptions: ThemeOptions = {
   colorMode: "light",
   primaryColor: "blue",
   fontSize: "md",
+  fontFamily: "system",
   sidebarWidth: "280px",
   contentWidth: "800px",
   drawerWidth: "400px",
@@ -81,12 +92,25 @@ const fontSizeMap = {
   },
 };
 
+// Font family definitions for accessible fonts
+const fontFamilyMap: Record<FontFamily, string> = {
+  system: `'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`,
+  inter: `'Inter', sans-serif`,
+  atkinson: `'Atkinson Hyperlegible', sans-serif`,
+  openDyslexic: `'OpenDyslexic', sans-serif`,
+  roboto: `'Roboto', sans-serif`,
+  sourceSansPro: `'Source Sans Pro', sans-serif`,
+};
+
 /** Generate an ExtendedChakraTheme with extra "layout" property. */
 function generateTheme(options: ThemeOptions): ExtendedChakraTheme {
   const config: ThemeConfig = {
     initialColorMode: options.colorMode,
     useSystemColorMode: false,
   };
+
+  // Get the font family string from our map
+  const fontFamily = fontFamilyMap[options.fontFamily];
 
   // 1) Create a base Chakra theme
   const baseTheme = extendTheme({
@@ -106,8 +130,8 @@ function generateTheme(options: ThemeOptions): ExtendedChakraTheme {
       },
     },
     fonts: {
-      heading: `'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`,
-      body: `'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`,
+      heading: fontFamily,
+      body: fontFamily,
       mono: `'JetBrains Mono', 'SF Mono', 'Roboto Mono', Menlo, Consolas, Monaco, monospace`,
     },
     fontSizes: fontSizeMap[options.fontSize],
@@ -282,6 +306,45 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     const newTheme = generateTheme(themeOptions);
     setTheme(newTheme);
   }, [themeOptions]);
+
+  // Inject font links for custom fonts
+  useEffect(() => {
+    // Only add the font link if it's not already present
+    const linkIds = [
+      'atkinson-font',
+      'opendyslexic-font',
+      'roboto-font',
+      'sourcesanspro-font',
+      'inter-font'
+    ];
+
+    // Remove any existing font links to avoid duplication
+    linkIds.forEach(id => {
+      const existingLink = document.getElementById(id);
+      if (existingLink) {
+        existingLink.remove();
+      }
+    });
+
+    // Function to create and add a link element
+    const addFontLink = (id: string, href: string) => {
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    };
+
+    // Add all our font links
+    addFontLink('inter-font', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    addFontLink('atkinson-font', 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+    addFontLink('roboto-font', 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+    addFontLink('sourcesanspro-font', 'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+    
+    // OpenDyslexic isn't available on Google Fonts, so we can link to a CDN or self-host it
+    // This is a placeholder - you would need to provide the correct URL for OpenDyslexic
+    addFontLink('opendyslexic-font', 'https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/open-dyslexic-regular.css');
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ themeOptions, updateThemeOptions, theme }}>

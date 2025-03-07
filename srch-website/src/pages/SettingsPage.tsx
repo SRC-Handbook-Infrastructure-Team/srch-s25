@@ -26,9 +26,11 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Button,
+  Tooltip,
+  Divider,
 } from "@chakra-ui/react";
 import MainLayout from "@/layouts/MainLayout";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme, FontFamily } from "@/context/ThemeContext";
 
 function parsePixelValue(val?: string): number {
   if (!val) return 0;
@@ -50,12 +52,50 @@ const SettingsPage: React.FC = () => {
     { value: "red", label: "Red" },
   ];
 
+  // Available font options with descriptions for accessibility
+  const fontOptions: { value: FontFamily; label: string; description: string }[] = [
+    { 
+      value: "system", 
+      label: "System Default", 
+      description: "Uses your system's default fonts" 
+    },
+    { 
+      value: "inter", 
+      label: "Inter", 
+      description: "Modern, clean sans-serif font designed for screens" 
+    },
+    { 
+      value: "atkinson", 
+      label: "Atkinson Hyperlegible", 
+      description: "Designed for maximum legibility, especially for readers with low vision" 
+    },
+    { 
+      value: "openDyslexic", 
+      label: "OpenDyslexic", 
+      description: "Designed to help readers with dyslexia" 
+    },
+    { 
+      value: "roboto", 
+      label: "Roboto", 
+      description: "Google's signature font with natural reading rhythm" 
+    },
+    { 
+      value: "sourceSansPro", 
+      label: "Source Sans Pro", 
+      description: "Clear, readable font by Adobe designed for user interfaces" 
+    },
+  ];
+
   const handleColorChange = (value: string) => {
     updateThemeOptions({ primaryColor: value });
   };
 
   const handleFontSizeChange = (value: string) => {
     updateThemeOptions({ fontSize: value as "sm" | "md" | "lg" });
+  };
+
+  const handleFontFamilyChange = (value: FontFamily) => {
+    updateThemeOptions({ fontFamily: value });
   };
 
   // The parsePixelValue calls are now safe, thanks to fallback
@@ -81,6 +121,7 @@ const SettingsPage: React.FC = () => {
       colorMode: "light",
       primaryColor: "blue",
       fontSize: "md",
+      fontFamily: "system",
       sidebarWidth: "280px",
       contentWidth: "800px",
       drawerWidth: "400px",
@@ -143,6 +184,83 @@ const SettingsPage: React.FC = () => {
                     <option value="md">Medium</option>
                     <option value="lg">Large</option>
                   </Select>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>
+                    Font Family 
+                    <Text as="span" fontSize="sm" fontWeight="normal" ml={2} color="gray.500">
+                      (Accessibility Options)
+                    </Text>
+                  </FormLabel>
+                  <Box mb={3}>
+                    <Text fontSize="sm" color="gray.500" mb={2}>
+                      Choose a font that works best for your reading needs
+                    </Text>
+                  </Box>
+                  <RadioGroup
+                    value={themeOptions.fontFamily}
+                    onChange={handleFontFamilyChange}
+                  >
+                    <VStack align="start" spacing={3} width="100%">
+                      {fontOptions.map((font) => (
+                        <Box 
+                          key={font.value} 
+                          width="100%" 
+                          p={2} 
+                          borderWidth="1px" 
+                          borderRadius="md"
+                          borderColor={themeOptions.fontFamily === font.value 
+                            ? colorMode === "dark" ? "blue.400" : "blue.500" 
+                            : colorMode === "dark" ? "gray.700" : "gray.200"
+                          }
+                          bg={themeOptions.fontFamily === font.value 
+                            ? colorMode === "dark" ? "blue.900" : "blue.50" 
+                            : "transparent"
+                          }
+                        >
+                          <Radio
+                            value={font.value}
+                            width="100%"
+                          >
+                            <Box>
+                              <Text 
+                                fontWeight="medium" 
+                                fontFamily={font.value === "system" 
+                                  ? undefined 
+                                  : `${font.label}, sans-serif`
+                                }
+                              >
+                                {font.label}
+                              </Text>
+                              <Text 
+                                fontSize="sm" 
+                                color="gray.500" 
+                                mt={1}
+                                fontFamily={font.value === "system" 
+                                  ? undefined 
+                                  : `${font.label}, sans-serif`
+                                }
+                              >
+                                {font.description}
+                              </Text>
+                              <Box mt={1}>
+                                <Text 
+                                  fontSize="sm" 
+                                  fontFamily={font.value === "system" 
+                                    ? undefined 
+                                    : `${font.label}, sans-serif`
+                                  }
+                                >
+                                  Sample text with {font.label} font
+                                </Text>
+                              </Box>
+                            </Box>
+                          </Radio>
+                        </Box>
+                      ))}
+                    </VStack>
+                  </RadioGroup>
                 </FormControl>
               </CardBody>
             </Card>
@@ -269,35 +387,17 @@ const SettingsPage: React.FC = () => {
                       <Text>px</Text>
                     </HStack>
                   </FormControl>
-
-                  <Box textAlign="right">
-                    <Button
-                      onClick={resetToDefaults}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Reset to defaults
-                    </Button>
-                  </Box>
                 </VStack>
               </CardBody>
             </Card>
           </GridItem>
         </Grid>
 
-        <Box
-          mt={10}
-          p={4}
-          borderRadius="md"
-          bg={colorMode === "dark" ? "gray.700" : "gray.100"}
-        >
-          <Heading size="sm" mb={2}>
-            Theme Preview
-          </Heading>
-          <Text fontSize="sm">
-            This is a preview of your current theme settings. Changes are
-            applied immediately throughout the application.
-          </Text>
+        {/* Reset Button */}
+        <Box mt={8} textAlign="center">
+          <Button colorScheme="red" onClick={resetToDefaults}>
+            Reset to Defaults
+          </Button>
         </Box>
       </Box>
     </MainLayout>
