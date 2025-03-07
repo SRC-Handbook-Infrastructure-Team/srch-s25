@@ -8,7 +8,12 @@ import {
   DrawerCloseButton,
   useColorMode,
   Box,
+  IconButton,
+  Tooltip,
+  Flex,
+  Heading,
 } from "@chakra-ui/react";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import MarkdownRenderer from "./MarkdownRenderer";
 
 interface ContentDrawerProps {
@@ -39,19 +44,36 @@ const ContentDrawer: React.FC<ContentDrawerProps> = ({
       trapFocus
       preserveScrollBarGap
     >
-      <DrawerOverlay />
+      <DrawerOverlay backdropFilter="blur(2px)" />
       <DrawerContent
         bg={colorMode === "dark" ? "gray.800" : "white"}
         maxW={width}
         transition="none"
         role="region"
         aria-label="Supplementary content drawer"
+        boxShadow="2xl"
       >
-        <DrawerCloseButton />
-        <DrawerHeader borderBottomWidth="1px">
-          Additional Information
+        <DrawerCloseButton 
+          zIndex="10"
+          size="lg"
+          borderRadius="full"
+          bg={colorMode === "dark" ? "gray.700" : "gray.100"}
+          _hover={{
+            bg: colorMode === "dark" ? "gray.600" : "gray.200",
+          }}
+          mt={2}
+          mr={2}
+        />
+        <DrawerHeader 
+          borderBottomWidth="1px" 
+          borderBottomColor={colorMode === "dark" ? "gray.700" : "gray.200"}
+          py={3}
+          px={4}
+          bg={colorMode === "dark" ? "gray.900" : "gray.50"}
+        >
+          <Heading size="md" fontWeight="medium">Additional Information</Heading>
         </DrawerHeader>
-        <DrawerBody p={4} position="relative">
+        <DrawerBody p={5} position="relative">
           <MarkdownRenderer content={content} />
 
           {/* Resize handle for the drawer */}
@@ -61,25 +83,39 @@ const ContentDrawer: React.FC<ContentDrawerProps> = ({
               top="50%"
               left={0}
               transform="translateY(-50%)"
-              h="40px"
-              w="12px"
+              h="80px"
+              w="6px"
               cursor="col-resize"
               display="flex"
               alignItems="center"
               justifyContent="center"
-              borderRadius="sm"
-              _hover={{ bg: colorMode === "dark" ? "blue.300" : "blue.100" }}
+              borderRadius="md"
+              _hover={{ bg: colorMode === "dark" ? "blue.500" : "blue.300" }}
+              _active={{ bg: colorMode === "dark" ? "blue.600" : "blue.400" }} 
               onMouseDown={onResizeStart}
               zIndex={10}
               role="separator"
               aria-orientation="vertical"
             >
-              <Box
-                w="2px"
-                h="20px"
-                bg={colorMode === "dark" ? "gray.600" : "gray.400"}
+              <Flex
+                h="40px"
+                w="4px"
                 borderRadius="full"
-              />
+                bg={colorMode === "dark" ? "gray.600" : "gray.400"}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Tooltip label="Resize drawer" placement="left" hasArrow>
+                  <IconButton
+                    aria-label="Resize drawer"
+                    icon={<ChevronLeftIcon />}
+                    size="xs"
+                    variant="ghost"
+                    opacity={0}
+                    _groupHover={{ opacity: 1 }}
+                  />
+                </Tooltip>
+              </Flex>
             </Box>
           )}
         </DrawerBody>

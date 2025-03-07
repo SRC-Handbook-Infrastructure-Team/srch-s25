@@ -106,15 +106,23 @@ function generateTheme(options: ThemeOptions): ExtendedChakraTheme {
       },
     },
     fonts: {
-      heading: `'Inter', sans-serif`,
-      body: `'Inter', sans-serif`,
+      heading: `'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`,
+      body: `'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`,
+      mono: `'JetBrains Mono', 'SF Mono', 'Roboto Mono', Menlo, Consolas, Monaco, monospace`,
     },
     fontSizes: fontSizeMap[options.fontSize],
     styles: {
       global: (props: any) => ({
         body: {
-          bg: props.colorMode === "dark" ? "gray.800" : "white",
+          bg: props.colorMode === "dark" ? "gray.900" : "white",
           color: props.colorMode === "dark" ? "gray.100" : "gray.800",
+          transitionProperty: "background-color",
+          transitionDuration: "normal",
+        },
+        "*::selection": {
+          bg: props.colorMode === "dark"
+            ? `${options.primaryColor}.700`
+            : `${options.primaryColor}.100`,
         },
       }),
     },
@@ -122,25 +130,103 @@ function generateTheme(options: ThemeOptions): ExtendedChakraTheme {
       Button: {
         baseStyle: {
           fontWeight: "medium",
+          borderRadius: "md",
           _focus: {
-            boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.6)",
+            boxShadow: `0 0 0 3px ${options.primaryColor}.300`,
           },
         },
         variants: {
           solid: (props: any) => ({
-            bg:
-              props.colorMode === "dark"
-                ? `${options.primaryColor}.200`
-                : `${options.primaryColor}.500`,
-            color: props.colorMode === "dark" ? "gray.800" : "white",
+            bg: props.colorMode === "dark"
+              ? `${options.primaryColor}.500`
+              : `${options.primaryColor}.500`,
+            color: "white",
             _hover: {
-              bg:
-                props.colorMode === "dark"
-                  ? `${options.primaryColor}.300`
-                  : `${options.primaryColor}.600`,
+              bg: props.colorMode === "dark"
+                ? `${options.primaryColor}.400`
+                : `${options.primaryColor}.600`,
+              transform: "translateY(-1px)",
+              boxShadow: "sm",
             },
-            _focus: {
-              boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.6)",
+            _active: {
+              bg: props.colorMode === "dark"
+                ? `${options.primaryColor}.600`
+                : `${options.primaryColor}.700`,
+              transform: "translateY(0)",
+            },
+          }),
+          outline: (props: any) => ({
+            borderColor: props.colorMode === "dark"
+              ? `${options.primaryColor}.400`
+              : `${options.primaryColor}.500`,
+            color: props.colorMode === "dark"
+              ? `${options.primaryColor}.300`
+              : `${options.primaryColor}.500`,
+            _hover: {
+              bg: props.colorMode === "dark"
+                ? `${options.primaryColor}.900`
+                : `${options.primaryColor}.50`,
+              borderColor: props.colorMode === "dark"
+                ? `${options.primaryColor}.300`
+                : `${options.primaryColor}.600`,
+              transform: "translateY(-1px)",
+              boxShadow: "sm",
+            },
+          }),
+          ghost: (props: any) => ({
+            color: props.colorMode === "dark" ? "gray.300" : "gray.600",
+            _hover: {
+              bg: props.colorMode === "dark" ? "gray.700" : "gray.100",
+              color: props.colorMode === "dark" ? "white" : "gray.800",
+            },
+            _active: {
+              bg: props.colorMode === "dark" ? "gray.600" : "gray.200",
+            },
+          }),
+        },
+        sizes: {
+          sm: {
+            h: "32px",
+            fontSize: "sm",
+            px: "12px",
+          },
+          md: {
+            h: "40px",
+            fontSize: "md",
+            px: "16px",
+          },
+        },
+      },
+      Link: {
+        baseStyle: (props: any) => ({
+          color: props.colorMode === "dark"
+            ? `${options.primaryColor}.300`
+            : `${options.primaryColor}.600`,
+          _hover: {
+            textDecoration: "none",
+            color: props.colorMode === "dark"
+              ? `${options.primaryColor}.200`
+              : `${options.primaryColor}.700`,
+          },
+        }),
+      },
+      Heading: {
+        baseStyle: {
+          fontWeight: "600",
+        },
+      },
+      Input: {
+        variants: {
+          filled: (props: any) => ({
+            field: {
+              bg: props.colorMode === "dark" ? "gray.700" : "gray.100",
+              _hover: {
+                bg: props.colorMode === "dark" ? "gray.600" : "gray.200",
+              },
+              _focus: {
+                bg: props.colorMode === "dark" ? "gray.600" : "gray.200",
+                borderColor: `${options.primaryColor}.500`,
+              },
             },
           }),
         },
