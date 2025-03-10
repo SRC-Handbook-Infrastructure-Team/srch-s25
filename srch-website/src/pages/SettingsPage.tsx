@@ -32,16 +32,34 @@ import {
 import MainLayout from "@/layouts/MainLayout";
 import { useTheme, FontFamily } from "@/context/ThemeContext";
 
+/**
+ * Helper function to extract a numerical value from a CSS pixel string.
+ * Handles conversion of values like "280px" to the number 280.
+ * 
+ * @param val - CSS value string with px unit
+ * @returns The number value without units, or 0 if parsing fails
+ */
 function parsePixelValue(val?: string): number {
   if (!val) return 0;
   return parseInt(val.replace("px", ""), 10) || 0;
 }
 
+/**
+ * SettingsPage Component
+ * 
+ * Provides a user interface for customizing application theme and layout settings.
+ * Includes controls for:
+ * - Color theme selection
+ * - Typography settings (font size and font family)
+ * - Layout dimensions (sidebar, content, drawer)
+ * 
+ * Settings are applied in real-time and saved to localStorage via ThemeContext.
+ */
 const SettingsPage: React.FC = () => {
   const { colorMode } = useColorMode();
   const { themeOptions, updateThemeOptions } = useTheme();
 
-  // Available color options
+  // Available color options for the primary color setting
   const colorOptions = [
     { value: "blue", label: "Blue" },
     { value: "teal", label: "Teal" },
@@ -86,36 +104,62 @@ const SettingsPage: React.FC = () => {
     },
   ];
 
+  /**
+   * Updates the primary color in theme options
+   * @param value - Color name (blue, teal, etc.)
+   */
   const handleColorChange = (value: string) => {
     updateThemeOptions({ primaryColor: value });
   };
 
+  /**
+   * Updates the font size scaling in theme options
+   * @param value - Font size option (sm, md, lg)
+   */
   const handleFontSizeChange = (value: string) => {
     updateThemeOptions({ fontSize: value as "sm" | "md" | "lg" });
   };
 
+  /**
+   * Updates the font family in theme options
+   * @param value - Font family option (system, inter, atkinson, etc.)
+   */
   const handleFontFamilyChange = (value: FontFamily) => {
     updateThemeOptions({ fontFamily: value });
   };
 
-  // The parsePixelValue calls are now safe, thanks to fallback
+  // Parse current layout dimensions from theme options
   const currentSidebarWidth = parsePixelValue(themeOptions.sidebarWidth);
   const currentContentWidth = parsePixelValue(themeOptions.contentWidth);
   const currentDrawerWidth = parsePixelValue(themeOptions.drawerWidth);
 
+  /**
+   * Updates the sidebar width in theme options
+   * @param value - Width in pixels
+   */
   const handleSidebarWidthChange = (value: number) => {
     updateThemeOptions({ sidebarWidth: `${value}px` });
   };
 
+  /**
+   * Updates the content area width in theme options
+   * @param value - Width in pixels
+   */
   const handleContentWidthChange = (value: number) => {
     updateThemeOptions({ contentWidth: `${value}px` });
   };
 
+  /**
+   * Updates the drawer width in theme options
+   * @param value - Width in pixels
+   */
   const handleDrawerWidthChange = (value: number) => {
     updateThemeOptions({ drawerWidth: `${value}px` });
   };
 
-  // Reset to defaults
+  /**
+   * Resets all theme options to default values
+   */
   const resetToDefaults = () => {
     updateThemeOptions({
       colorMode: "light",
@@ -135,8 +179,9 @@ const SettingsPage: React.FC = () => {
           Theme Settings
         </Heading>
 
+        {/* Settings grid layout - 2 columns on desktop, 1 on mobile */}
         <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
-          {/* Colors */}
+          {/* Colors Section */}
           <GridItem>
             <Card variant="outline">
               <CardHeader pb={1}>
@@ -167,13 +212,14 @@ const SettingsPage: React.FC = () => {
             </Card>
           </GridItem>
 
-          {/* Typography */}
+          {/* Typography Section */}
           <GridItem>
             <Card variant="outline">
               <CardHeader pb={1}>
                 <Heading size="md">Typography</Heading>
               </CardHeader>
               <CardBody>
+                {/* Font Size Control */}
                 <FormControl mb={4}>
                   <FormLabel>Font Size</FormLabel>
                   <Select
@@ -186,6 +232,7 @@ const SettingsPage: React.FC = () => {
                   </Select>
                 </FormControl>
 
+                {/* Font Family Control with Accessibility Options */}
                 <FormControl>
                   <FormLabel>
                     Font Family 
@@ -203,6 +250,7 @@ const SettingsPage: React.FC = () => {
                     onChange={handleFontFamilyChange}
                   >
                     <VStack align="start" spacing={3} width="100%">
+                      {/* Render each font option with a preview */}
                       {fontOptions.map((font) => (
                         <Box 
                           key={font.value} 
@@ -224,6 +272,7 @@ const SettingsPage: React.FC = () => {
                             width="100%"
                           >
                             <Box>
+                              {/* Font name in the actual font */}
                               <Text 
                                 fontWeight="medium" 
                                 fontFamily={font.value === "system" 
@@ -233,6 +282,7 @@ const SettingsPage: React.FC = () => {
                               >
                                 {font.label}
                               </Text>
+                              {/* Description of the font's accessibility features */}
                               <Text 
                                 fontSize="sm" 
                                 color="gray.500" 
@@ -244,6 +294,7 @@ const SettingsPage: React.FC = () => {
                               >
                                 {font.description}
                               </Text>
+                              {/* Sample text in the font */}
                               <Box mt={1}>
                                 <Text 
                                   fontSize="sm" 
@@ -266,7 +317,7 @@ const SettingsPage: React.FC = () => {
             </Card>
           </GridItem>
 
-          {/* Layout */}
+          {/* Layout Settings Section - spans full width */}
           <GridItem colSpan={{ base: 1, md: 2 }}>
             <Card variant="outline">
               <CardHeader pb={1}>
@@ -277,7 +328,7 @@ const SettingsPage: React.FC = () => {
               </CardHeader>
               <CardBody>
                 <VStack align="stretch" spacing={6}>
-                  {/* Sidebar Width */}
+                  {/* Sidebar Width Control */}
                   <FormControl>
                     <FormLabel>Sidebar Width</FormLabel>
                     <HStack spacing={4}>
@@ -314,7 +365,7 @@ const SettingsPage: React.FC = () => {
                     </HStack>
                   </FormControl>
 
-                  {/* Content Width */}
+                  {/* Content Width Control */}
                   <FormControl>
                     <FormLabel>Content Width</FormLabel>
                     <HStack spacing={4}>
@@ -351,7 +402,7 @@ const SettingsPage: React.FC = () => {
                     </HStack>
                   </FormControl>
 
-                  {/* Drawer Width */}
+                  {/* Drawer Width Control */}
                   <FormControl>
                     <FormLabel>Drawer Width</FormLabel>
                     <HStack spacing={4}>

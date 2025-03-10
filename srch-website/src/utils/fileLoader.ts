@@ -1,7 +1,15 @@
 import { MarkdownFile, Category } from "@/context/MarkdownContext";
 
 // Constants for improved code organization
+/**
+ * Default category ordering value for categories that don't have explicit ordering
+ */
 const DEFAULT_CATEGORY_ORDER = 100;
+
+/**
+ * Priority ordering for common category types
+ * Lower values appear first in navigation
+ */
 const CATEGORY_PRIORITIES: Record<string, number> = {
   introduction: 1,
   "getting-started": 2,
@@ -16,19 +24,29 @@ const CATEGORY_PRIORITIES: Record<string, number> = {
   appendix: 11,
 };
 
-// Interface for frontmatter metadata
+/**
+ * Interface for the frontmatter metadata that can be present in markdown files
+ */
 interface FileMetadata {
-  category?: string;
-  categoryName?: string;
-  categoryOrder?: number;
-  order?: number;
-  title?: string;
-  [key: string]: any;
+  category?: string;        // Category identifier
+  categoryName?: string;    // Display name for the category
+  categoryOrder?: number;   // Order of the category in navigation
+  order?: number;           // Order of this file within its category
+  title?: string;           // Custom title for the file
+  [key: string]: any;       // Other arbitrary metadata
 }
 
 /**
- * Loads all markdown files from the filesystem
- * @returns Promise with main files, drawer files, and categories
+ * Loads all markdown files from the filesystem.
+ * This is the main entry point for content loading in the application.
+ * 
+ * It does the following:
+ * 1. Imports markdown files using Vite's import.meta.glob
+ * 2. Processes frontmatter and content
+ * 3. Categorizes files based on metadata or content
+ * 4. Handles errors gracefully with placeholder content
+ * 
+ * @returns Promise with categorized main files, drawer files, and category metadata
  */
 export async function loadMarkdownFiles(): Promise<{
   mainFiles: MarkdownFile[];
@@ -37,6 +55,7 @@ export async function loadMarkdownFiles(): Promise<{
 }> {
   try {
     // Dynamically import all markdown files from their respective directories
+    // This uses Vite's import.meta.glob feature for dynamic imports
     const mainFilesModules = import.meta.glob("/src/markdown/main_files/*.md", {
       eager: true,
     });
@@ -48,7 +67,7 @@ export async function loadMarkdownFiles(): Promise<{
     // Track unique categories found in the files
     const categoriesMap = new Map<string, Category>();
 
-    // Process main files
+    // Process main files with error handling for each file
     const mainFiles: MarkdownFile[] = await Promise.all(
       Object.entries(mainFilesModules).map(async ([path, module]) => {
         try {
@@ -61,7 +80,7 @@ export async function loadMarkdownFiles(): Promise<{
       })
     );
 
-    // Process drawer files
+    // Process drawer files with similar error handling
     const drawerFiles: MarkdownFile[] = await Promise.all(
       Object.entries(drawerFilesModules).map(async ([path, module]) => {
         try {
@@ -79,7 +98,7 @@ export async function loadMarkdownFiles(): Promise<{
       (a, b) => a.order - b.order
     );
 
-    // Remove null/undefined entries and sort files
+    // Remove null/undefined entries and sort files by their order
     const validMainFiles = mainFiles
       .filter(Boolean)
       .sort((a, b) => (a.order || 999) - (b.order || 999));
@@ -100,7 +119,13 @@ export async function loadMarkdownFiles(): Promise<{
 }
 
 /**
- * Process a single markdown file and extract its content and metadata
+ * Process a single markdown file and extract its content and metadata.
+ * 
+ * @param path - File path of the markdown file
+ * @param module - Module object from import.meta.glob
+ * @param type - File type (main content or drawer/supplementary content)
+ * @param categoriesMap - Map to track and update categories
+ * @returns Processed MarkdownFile object
  */
 function processMarkdownFile(
   path: string, 
@@ -141,7 +166,13 @@ function processMarkdownFile(
 }
 
 /**
- * Creates an error placeholder file when a file fails to load
+ * Creates an error placeholder file when a file fails to load.
+ * This ensures the application still works even if some files have issues.
+ * 
+ * @param path - Path of the file that failed
+ * @param type - Whether this was a main or drawer file
+ * @param error - The error that occurred
+ * @returns A placeholder MarkdownFile with error information
  */
 function createErrorFile(
   path: string,
@@ -163,14 +194,21 @@ function createErrorFile(
 }
 
 /**
- * Generate a random ID for files missing an ID
+ * Generate a random ID for files missing an ID.
+ * Used as a fallback to ensure all files have unique IDs.
+ * 
+ * @returns Random string ID
  */
 function generateRandomId(): string {
   return `file-${Math.random().toString(36).substr(2, 9)}`;
 }
 
 /**
- * Helper function to extract and remove frontmatter
+ * Extract and remove frontmatter from markdown content.
+ * Supports YAML-style frontmatter between --- markers.
+ * 
+ * @param content - Raw markdown content
+ * @returns Object with clean content and parsed metadata
  */
 function extractFrontmatter(content: string): {
   cleanContent: string;
@@ -200,7 +238,7 @@ function extractFrontmatter(content: string): {
       const key = parts[0].trim();
       const value = parts.slice(1).join(":").trim();
 
-      // Try to convert numeric values
+      // Try to convert numeric values or booleans
       if (/^\d+$/.test(value)) {
         metadata[key] = parseInt(value, 10);
       } else if (value === "true") {
@@ -217,7 +255,10 @@ function extractFrontmatter(content: string): {
 }
 
 /**
- * Helper function to extract title from the first H1 heading
+ * Extract title from the first H1 heading in the content.
+ * 
+ * @param content - Markdown content
+ * @returns Title text or null if no H1 heading found
  */
 function extractTitle(content: string): string | null {
   if (!content) return null;
@@ -226,7 +267,11 @@ function extractTitle(content: string): string | null {
 }
 
 /**
- * Helper function to format a file ID into a readable title
+ * Format a file ID into a readable title by converting
+ * kebab-case to Title Case.
+ * 
+ * @param id - File ID (typically the filename without extension)
+ * @returns Formatted title
  */
 function formatTitle(id: string): string {
   if (!id) return "Untitled";
@@ -237,7 +282,12 @@ function formatTitle(id: string): string {
 }
 
 /**
- * Helper function to determine category information from metadata or infer it
+ * Determine category information from file metadata or infer it from content.
+ * Uses explicit metadata if available, otherwise tries to categorize based on filename.
+ * 
+ * @param metadata - File frontmatter metadata
+ * @param id - File ID
+ * @returns Category information: id, name, order, and optional fileOrder
  */
 function determineCategoryInfo(
   metadata: FileMetadata,
@@ -263,7 +313,11 @@ function determineCategoryInfo(
 }
 
 /**
- * Helper function to infer category order
+ * Helper function to infer category order from category ID.
+ * Uses predefined priorities for known categories.
+ * 
+ * @param categoryId - Category identifier
+ * @returns Numeric ordering value (lower appears first)
  */
 function inferCategoryOrder(categoryId: string): number {
   if (!categoryId) return DEFAULT_CATEGORY_ORDER;
@@ -271,7 +325,11 @@ function inferCategoryOrder(categoryId: string): number {
 }
 
 /**
- * Helper function to infer category from file ID
+ * Infer category from file ID by looking for key terms in the filename.
+ * This is a fallback when no explicit category is defined in frontmatter.
+ * 
+ * @param id - File ID (typically the filename without extension)
+ * @returns Category information derived from the filename
  */
 function inferCategoryFromId(id: string): {
   id: string;
@@ -287,7 +345,7 @@ function inferCategoryFromId(id: string): {
     };
   }
 
-  // Simple mapping based on filename
+  // Simple heuristic mapping based on filename patterns
   if (id.includes("fairness-metric") || id.includes("equalized-odds")) {
     return {
       id: "fairness-metrics",

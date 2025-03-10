@@ -6,41 +6,65 @@ import ContentDrawer from "@/components/ContentDrawer";
 import { useTheme, ExtendedChakraTheme } from "@/context/ThemeContext";
 import { useMarkdown } from "@/context/MarkdownContext";
 
+/**
+ * Props for the MainLayout component.
+ */
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode; // Content to be displayed in the main content area
 }
 
+/**
+ * MainLayout Component
+ * 
+ * The primary layout component for the application that provides:
+ * 1. Responsive layout with sidebar, content area, and optional drawer
+ * 2. Resizable panels with drag handles
+ * 3. Collapsible sidebar
+ * 4. Responsive adjustments for mobile/desktop
+ * 5. Theme-aware styling
+ * 
+ * This component is a sophisticated, responsive container that forms the
+ * foundation of the application's UI structure.
+ * 
+ * @param children - Content to render in the main content area
+ */
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { theme } = useTheme();
-  const extendedTheme = theme as ExtendedChakraTheme; // So we can access .layout
+  const extendedTheme = theme as ExtendedChakraTheme; // Cast to access layout properties
   const { colorMode } = useColorMode();
+  
+  // Mobile sidebar disclosure state
   const {
     isOpen: isMobileSidebarOpen,
     onToggle: toggleMobileSidebar,
     onClose: closeMobileSidebar,
   } = useDisclosure();
+  
+  // Drawer state from MarkdownContext
   const { isDrawerOpen, closeDrawer, drawerContent } = useMarkdown();
 
-  // We read from extendedTheme.layout
+  // Get layout dimensions from theme
   const defaultSidebarWidth = extendedTheme.layout.sidebarWidth;
   const defaultDrawerWidth = extendedTheme.layout.drawerWidth;
   const contentMaxWidth = extendedTheme.layout.contentWidth;
 
-  // Collapsible sidebar
+  // State for sidebar collapse toggle
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  // We only enable resizing for the sidebar and drawer now,
-  // removing the content resizing for a simpler layout.
+  // State for resizable panels - only sidebar and drawer are resizable
   const [sidebarWidth, setSidebarWidth] = useState(defaultSidebarWidth);
   const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
 
-  // For the drag interactions
+  // State for resize drag operations
   const [isResizingSidebar, setIsResizingSidebar] = useState(false);
   const [isResizingDrawer, setIsResizingDrawer] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startWidth, setStartWidth] = useState("");
 
-  // If the user collapses, set sidebar to 0
+  /**
+   * Update sidebar width when collapse state changes.
+   * Sets width to 0 when collapsed, restores to default when expanded.
+   */
   useEffect(() => {
     if (isSidebarCollapsed) {
       setSidebarWidth("0px");
@@ -49,39 +73,59 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     }
   }, [isSidebarCollapsed, defaultSidebarWidth]);
 
+  /**
+   * Handle mouse events for resizing panels.
+   * This effect manages the drag operations for resizing the sidebar and drawer.
+   * It adds global document listeners when a resize is in progress and cleans them up after.
+   */
   useEffect(() => {
+    /**
+     * Handle mouse movement during resize operations.
+     * Calculates new width based on mouse position and constraints.
+     */
     const handleMouseMove = (e: MouseEvent) => {
       if (isResizingSidebar) {
+        // Calculate new sidebar width with min/max constraints
         const newWidth = Math.max(
-          180,
-          Math.min(600, parseInt(startWidth) + (e.clientX - startX))
+          180, // Minimum width
+          Math.min(600, parseInt(startWidth) + (e.clientX - startX)) // Maximum width
         );
         setSidebarWidth(`${newWidth}px`);
       } else if (isResizingDrawer && isDrawerOpen) {
+        // Calculate new drawer width with min/max constraints
         const newWidth = Math.max(
-          250,
-          Math.min(800, parseInt(startWidth) - (e.clientX - startX))
+          250, // Minimum width
+          Math.min(800, parseInt(startWidth) - (e.clientX - startX)) // Maximum width
         );
         setDrawerWidth(`${newWidth}px`);
       }
     };
 
+    /**
+     * Handle mouse up to end resize operations.
+     */
     const handleMouseUp = () => {
       setIsResizingSidebar(false);
       setIsResizingDrawer(false);
     };
 
+    // Add event listeners only during active resize operations
     if (isResizingSidebar || isResizingDrawer) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
     }
+    
+    // Cleanup event listeners on unmount or when resize state changes
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isResizingSidebar, isResizingDrawer, isDrawerOpen, startX, startWidth]);
 
-  // Initiate the sidebar drag
+  /**
+   * Initiate sidebar resize operation on mousedown.
+   * Captures starting position and width for the drag operation.
+   */
   const handleSidebarResizeMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsResizingSidebar(true);
@@ -89,7 +133,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     setStartWidth(sidebarWidth.replace("px", ""));
   };
 
-  // Initiate the drawer drag
+  /**
+   * Initiate drawer resize operation on mousedown.
+   * Captures starting position and width for the drag operation.
+   */
   const handleDrawerResizeMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsResizingDrawer(true);
@@ -99,6 +146,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <Flex direction="column" minH="100vh" overflow="hidden">
+      {/* Application header with navigation controls */}
       <Header
         toggleSidebar={toggleMobileSidebar}
         toggleDesktopSidebarCollapse={() =>
@@ -116,9 +164,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         h="calc(100vh - 60px)"
         overflow="hidden"
       >
-        {/* Desktop sidebar */}
+        {/* Desktop sidebar - hidden on mobile */}
         <Box
-          display={{ base: "none", md: "block" }}
+          display={{ base: "none", md: "block" }} // Hide on mobile
           position="fixed"
           left={0}
           top="60px"
@@ -135,7 +183,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           {!isSidebarCollapsed && (
             <>
               <Sidebar />
-              {/* Resizing handle for the sidebar */}
+              {/* Resize handle for the sidebar - allows width adjustment */}
               <Box
                 position="absolute"
                 top={0}
@@ -150,19 +198,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 onMouseDown={handleSidebarResizeMouseDown}
                 role="separator"
                 aria-orientation="vertical"
+                aria-label="Resize sidebar"
               />
             </>
           )}
         </Box>
 
-        {/* Mobile sidebar as a Drawer */}
+        {/* Mobile sidebar as overlay drawer - visible only on mobile */}
         <Sidebar
           isMobile
           isOpen={isMobileSidebarOpen}
           onClose={closeMobileSidebar}
         />
 
-        {/* Main content area (not resizable here) */}
+        {/* Main content area with dynamic margin adjustment */}
         <Box
           flex="1"
           ml={{ base: 0, md: isSidebarCollapsed ? 0 : sidebarWidth }}
@@ -173,7 +222,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           overflowY="auto"
           position="relative"
         >
-          {/* We center the content with maxW from user settings */}
+          {/* Content container with max width and centered layout */}
           <Box
             maxW={contentMaxWidth}
             w="100%"
@@ -190,7 +239,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           </Box>
         </Box>
 
-        {/* Right drawer for supplementary content */}
+        {/* Right drawer for supplementary content - shown when triggered */}
         <ContentDrawer
           isOpen={isDrawerOpen}
           onClose={closeDrawer}

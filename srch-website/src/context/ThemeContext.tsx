@@ -12,28 +12,36 @@ import {
   // We import defaultTheme if needed, or we can skip it
 } from "@chakra-ui/react";
 
-// Font family options for accessibility
+/**
+ * Supported font family options with a focus on accessibility.
+ * Includes specialized fonts like Atkinson Hyperlegible for low vision
+ * and OpenDyslexic for users with dyslexia.
+ */
 export type FontFamily = 
-  | 'system' 
-  | 'inter' 
-  | 'atkinson' 
-  | 'openDyslexic' 
-  | 'roboto' 
-  | 'sourceSansPro';
+  | 'system'        // System default fonts
+  | 'inter'         // Clean, modern sans-serif
+  | 'atkinson'      // Atkinson Hyperlegible - optimized for low vision
+  | 'openDyslexic'  // Designed specifically for dyslexic readers
+  | 'roboto'        // Google's signature font
+  | 'sourceSansPro'; // Adobe's clean, readable UI font
 
+/**
+ * Core theme options that can be customized by the user.
+ * These settings control the visual appearance and layout of the application.
+ */
 export interface ThemeOptions {
-  colorMode: "light" | "dark";
-  primaryColor: string;
-  fontSize: "sm" | "md" | "lg";
-  fontFamily: FontFamily;
-  sidebarWidth: string;
-  contentWidth: string;
-  drawerWidth: string;
+  colorMode: "light" | "dark";       // Color theme (light/dark)
+  primaryColor: string;              // Primary accent color
+  fontSize: "sm" | "md" | "lg";      // Base font size scale
+  fontFamily: FontFamily;            // Font family selection (accessibility)
+  sidebarWidth: string;              // Width of the navigation sidebar
+  contentWidth: string;              // Maximum width of the main content area
+  drawerWidth: string;               // Width of the supplementary drawer
 }
 
 /**
- * We extend ChakraTheme with our own "layout" field.
- * Now TypeScript will let us do `theme.layout.sidebarWidth`.
+ * Extends the standard Chakra theme with our custom layout properties.
+ * This makes layout dimensions available throughout the theme object.
  */
 export interface ExtendedChakraTheme extends ChakraTheme {
   layout: {
@@ -43,12 +51,20 @@ export interface ExtendedChakraTheme extends ChakraTheme {
   };
 }
 
+/**
+ * Props for the ThemeContext Provider.
+ * Provides access to current theme options, a way to update them,
+ * and the generated Chakra theme object.
+ */
 interface ThemeContextProps {
-  themeOptions: ThemeOptions;
-  updateThemeOptions: (options: Partial<ThemeOptions>) => void;
-  theme: ExtendedChakraTheme;
+  themeOptions: ThemeOptions;                              // Current theme options
+  updateThemeOptions: (options: Partial<ThemeOptions>) => void; // Function to update options
+  theme: ExtendedChakraTheme;                             // Generated Chakra theme
 }
 
+/**
+ * Default theme settings used as fallback and for reset functionality.
+ */
 const defaultThemeOptions: ThemeOptions = {
   colorMode: "light",
   primaryColor: "blue",
@@ -59,9 +75,13 @@ const defaultThemeOptions: ThemeOptions = {
   drawerWidth: "400px",
 };
 
+// Create context with undefined default - will be populated by provider
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
-// Map "sm", "md", "lg" to actual numeric sizes
+/**
+ * Maps font size settings (sm, md, lg) to actual pixel values for different
+ * text size variants.
+ */
 const fontSizeMap = {
   sm: {
     sm: "0.75rem",
@@ -92,7 +112,10 @@ const fontSizeMap = {
   },
 };
 
-// Font family definitions for accessible fonts
+/**
+ * Maps font family types to actual CSS font-family strings.
+ * Each entry includes appropriate fallbacks for system compatibility.
+ */
 const fontFamilyMap: Record<FontFamily, string> = {
   system: `'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif`,
   inter: `'Inter', sans-serif`,
@@ -102,8 +125,16 @@ const fontFamilyMap: Record<FontFamily, string> = {
   sourceSansPro: `'Source Sans Pro', sans-serif`,
 };
 
-/** Generate an ExtendedChakraTheme with extra "layout" property. */
+/**
+ * Generates a complete Chakra theme based on the provided options.
+ * This function transforms our simplified theme options into a fully-featured
+ * Chakra theme with all necessary style definitions.
+ * 
+ * @param options - User-defined theme options
+ * @returns A complete Chakra theme extended with our custom layout properties
+ */
 function generateTheme(options: ThemeOptions): ExtendedChakraTheme {
+  // Set up initial Chakra config
   const config: ThemeConfig = {
     initialColorMode: options.colorMode,
     useSystemColorMode: false,
@@ -112,7 +143,7 @@ function generateTheme(options: ThemeOptions): ExtendedChakraTheme {
   // Get the font family string from our map
   const fontFamily = fontFamilyMap[options.fontFamily];
 
-  // 1) Create a base Chakra theme
+  // 1) Create a base Chakra theme with our customizations
   const baseTheme = extendTheme({
     config,
     colors: {
@@ -270,9 +301,20 @@ function generateTheme(options: ThemeOptions): ExtendedChakraTheme {
   return extendedTheme;
 }
 
+/**
+ * ThemeProvider component that manages theme state and provides theme context.
+ * Responsible for:
+ * 1. Loading saved theme from localStorage
+ * 2. Generating the Chakra theme from options
+ * 3. Providing theme update capabilities
+ * 4. Loading necessary web fonts
+ * 
+ * @param children - Child components that will have access to theme context
+ */
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  // Initialize theme options from localStorage or defaults
   const [themeOptions, setThemeOptions] = useState<ThemeOptions>(() => {
     // Merge default with localStorage to avoid undefined
     const saved = localStorage.getItem("themeOptions");
@@ -288,11 +330,17 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     return defaultThemeOptions;
   });
 
+  // Generate the actual theme from options
   const [theme, setTheme] = useState<ExtendedChakraTheme>(() =>
     generateTheme(themeOptions)
   );
 
-  /** Called to update partial fields in themeOptions and re-generate theme */
+  /**
+   * Updates theme options and saves to localStorage.
+   * Allows partial updates - only changed properties need to be specified.
+   * 
+   * @param updates - Partial theme options to update
+   */
   const updateThemeOptions = (updates: Partial<ThemeOptions>) => {
     setThemeOptions((prev) => {
       const newOptions = { ...prev, ...updates };
@@ -301,6 +349,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     });
   };
 
+  // Regenerate theme when options change
   useEffect(() => {
     // Re-generate the theme whenever themeOptions changes
     const newTheme = generateTheme(themeOptions);
@@ -326,7 +375,12 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
       }
     });
 
-    // Function to create and add a link element
+    /**
+     * Creates and appends a link element to load an external font.
+     * 
+     * @param id - Unique ID for the link element
+     * @param href - URL to the font resource
+     */
     const addFontLink = (id: string, href: string) => {
       const link = document.createElement('link');
       link.id = id;
@@ -353,6 +407,13 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
+/**
+ * Custom hook to access theme context.
+ * Provides a typed interface to the current theme settings and updater function.
+ * 
+ * @returns ThemeContextProps with current theme state and update function
+ * @throws Error if used outside of ThemeProvider
+ */
 export const useTheme = (): ThemeContextProps => {
   const ctx = useContext(ThemeContext);
   if (ctx === undefined) {

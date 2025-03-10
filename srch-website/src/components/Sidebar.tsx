@@ -29,7 +29,14 @@ import {
   SearchIcon,
 } from "@chakra-ui/icons";
 
-/** Debounce Hook */
+/**
+ * Custom hook for debouncing values.
+ * Useful for delaying search operations until the user stops typing.
+ * 
+ * @param value - Value to debounce
+ * @param delay - Delay in milliseconds
+ * @returns Debounced value that updates only after the delay
+ */
 function useDebounce<T>(value: T, delay: number) {
   const [debounced, setDebounced] = React.useState(value);
 
@@ -41,12 +48,29 @@ function useDebounce<T>(value: T, delay: number) {
   return debounced;
 }
 
+/**
+ * Props for the Sidebar component
+ */
 interface SidebarProps {
-  isMobile?: boolean;
-  isOpen?: boolean;
-  onClose?: () => void;
+  isMobile?: boolean;    // Whether this is rendering as a mobile drawer
+  isOpen?: boolean;      // For mobile: whether the drawer is open
+  onClose?: () => void;  // For mobile: callback to close the drawer
 }
 
+/**
+ * Sidebar Component
+ * 
+ * Provides navigation for markdown files organized by categories.
+ * Features:
+ * 1. Expandable/collapsible categories
+ * 2. Real-time search filtering
+ * 3. Visual indicators for current selection
+ * 4. Responsive design (works as fixed sidebar or mobile drawer)
+ * 5. Theme-aware styling
+ * 
+ * This component is a key navigation element that allows users
+ * to browse through the structured content of the application.
+ */
 const Sidebar: React.FC<SidebarProps> = ({
   isMobile = false,
   isOpen = false,
@@ -55,14 +79,20 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { colorMode } = useColorMode();
   const { categories, mainFiles, loadFile, currentFile } = useMarkdown();
 
+  // Track which categories are expanded/collapsed
   const [expandedCategories, setExpandedCategories] = React.useState<
     Record<string, boolean>
   >({});
+  
+  // Search functionality
   const [searchValue, setSearchValue] = React.useState("");
-  // Debounce for 300ms
+  // Debounce search to improve performance
   const debouncedSearch = useDebounce(searchValue, 300);
 
-  // Expand category of the current file by default
+  /**
+   * Automatically expand the category of the current file
+   * This helps users see the context of the current document
+   */
   React.useEffect(() => {
     if (currentFile) {
       setExpandedCategories((prev) => ({
@@ -72,7 +102,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [currentFile]);
 
-  // Group main files by category
+  /**
+   * Organize files by their categories.
+   * Memoized to prevent unnecessary recalculation.
+   */
   const filesByCategory = useMemo(() => categories.map((cat) => ({
     ...cat,
     files: mainFiles
@@ -80,7 +113,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       .sort((a, b) => (a.order || 0) - (b.order || 0)),
   })), [categories, mainFiles]);
 
-  // Filter based on the debounced search input
+  /**
+   * Filter files based on search input.
+   * If search is empty, show all files.
+   * Memoized to prevent filtering on every render.
+   */
   const filteredCategories = useMemo(() => {
     if (!debouncedSearch.trim()) {
       return filesByCategory;
@@ -88,6 +125,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     
     return filesByCategory.map((cat) => {
       const filteredFiles = cat.files.filter((file) => {
+        // Combine title and category for searching
         const combined = (file.title + file.category)
           .toLowerCase()
           .replace(/\s+/g, "");
@@ -99,6 +137,11 @@ const Sidebar: React.FC<SidebarProps> = ({
     });
   }, [filesByCategory, debouncedSearch]);
 
+  /**
+   * Toggle a category's expanded/collapsed state
+   * 
+   * @param catId - ID of the category to toggle
+   */
   const toggleCategory = (catId: string) => {
     setExpandedCategories((prev) => ({
       ...prev,
@@ -106,12 +149,21 @@ const Sidebar: React.FC<SidebarProps> = ({
     }));
   };
 
+  /**
+   * Handle clicking on a file in the sidebar
+   * Loads the selected file and closes the drawer on mobile
+   * 
+   * @param fileId - ID of the file to load
+   */
   const handleFileClick = (fileId: string) => {
     if (currentFile?.id === fileId) return; // Don't reload if already active
     loadFile(fileId);
     if (isMobile) onClose();
   };
 
+  /**
+   * The shared sidebar content between desktop and mobile versions
+   */
   const SidebarContent = () => (
     <VStack
       align="stretch"
@@ -148,6 +200,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         </InputGroup>
       </Box>
 
+      {/* Search indicator - shows only when searching */}
       {debouncedSearch.trim() && (
         <Box mb={2}>
           <Text fontSize="sm" color="gray.500">
@@ -158,10 +211,10 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <Divider />
 
-      {/* Categories & Files */}
+      {/* Categories & Files List */}
       <VStack align="stretch" spacing={1}>
         {filteredCategories.map((cat) => {
-          // Skip if no files after filtering
+          // Skip empty categories (e.g., no matches in search)
           if (!cat.files.length) return null;
 
           const isExpanded = expandedCategories[cat.id] || false;
@@ -169,6 +222,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
           return (
             <Box key={cat.id} mb={1}>
+              {/* Category header - clickable to expand/collapse */}
               <Flex
                 p={3}
                 borderRadius="md"
@@ -197,21 +251,28 @@ const Sidebar: React.FC<SidebarProps> = ({
                   bg: colorMode === "dark" ? "gray.700" : "gray.100",
                 }}
                 transition="all 0.2s"
+                aria-expanded={isExpanded}
+                role="button"
               >
                 <Text>
                   {cat.name}
+                  {/* Show badge for current category */}
                   {isCatCurrent && !debouncedSearch.trim() && (
                     <Badge ml={2} colorScheme="blue" variant="subtle">
                       Current
                     </Badge>
                   )}
                 </Text>
+                {/* Chevron icon indicates expanded/collapsed state */}
                 <Icon 
                   as={isExpanded ? ChevronDownIcon : ChevronRightIcon} 
                   boxSize={5}
                   transition="transform 0.2s"
+                  aria-hidden="true"
                 />
               </Flex>
+              
+              {/* Expandable file list within category */}
               <Collapse in={isExpanded} animateOpacity>
                 <List spacing={1} mt={1} ml={2}>
                   {cat.files.map((file) => {
@@ -255,6 +316,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                           transition="all 0.2s"
                           role="button"
                           aria-pressed={isActive}
+                          aria-current={isActive ? "page" : undefined}
                         >
                           <Text>
                             {file.title}
@@ -270,6 +332,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         })}
       </VStack>
 
+      {/* No results message */}
       {filteredCategories.every(cat => cat.files.length === 0) && (
         <Box textAlign="center" py={8} color="gray.500">
           <Text>No matching topics found</Text>
@@ -281,7 +344,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     </VStack>
   );
 
-  // Mobile Drawer
+  // Render as a mobile drawer when on small screens
   if (isMobile) {
     return (
       <Drawer isOpen={isOpen} placement="left" onClose={onClose} size="xs">
