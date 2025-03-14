@@ -2,7 +2,9 @@ import React from 'react'
 
 function Newpage() {
   return (
-    <h1>NEWPAGE</h1>
+    <div>
+        <h1>Another page</h1>
+    </div>
   )
 }
 
