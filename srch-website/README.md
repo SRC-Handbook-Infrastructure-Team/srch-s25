@@ -15,4 +15,4 @@ Currently, two official plugins are available:
 
 `npm i react-router-dom`
 
-
+`npm install react-markdown`
