@@ -23,6 +23,8 @@ function parse_structure_json(structure,currPath, prevPath=""){
     const isActive = currPath === itemPath;
     
     return (
+      // TODO: add submenu dropdown with arrows
+      // Link header
       <ListItem key={index}>
         <Box bg={isActive ? "gray.100" : "transparent"} py={1}>
           <Link to={itemPath}>
@@ -31,7 +33,7 @@ function parse_structure_json(structure,currPath, prevPath=""){
             </Text>
           </Link>
         </Box>
-
+        {/* Nest any sub menus */}
         {item.subpages && item.subpages.length > 0 && (
           <List pl={2}>
             {parse_structure_json(item.subpages, currPath, itemPath)}
