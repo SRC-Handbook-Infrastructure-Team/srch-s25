@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Newpage from './pages/Newpage'
 import NavBar from './components/NavBar'
+import About from './pages/About'
 
 
 
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/ai" element={<Newpage />} />
+          <Route path="/about" element={<About/>}/>
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

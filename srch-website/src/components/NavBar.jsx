@@ -59,6 +59,7 @@ function NavBar() {
           <DrawerBody>
             <List>{parse_structure_json(structure, currPath)}</List>
             {/* TODO: Background: make it more extensible (a function to automatically set background) + Styling */}
+            <Link to="/about">About Us</Link>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

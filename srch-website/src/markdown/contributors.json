@@ -1,0 +1,56 @@
+[
+  {
+    "team": "Faculty Advisors",
+    "members": [
+      {
+        "name": "Julia Netter",
+        "role": "Faculty Advisor",
+        "pronouns": "he/him",
+        "bio": "Julia bio..."
+      },
+      {
+        "name": "Suresh Venkatasubramanian",
+        "role": "Faculty Advisor",
+        "pronouns": "she/her",
+        "bio": "Suresh bio..."
+      }
+    ],
+    "alumni": []
+  },
+  {
+    "team": "Product",
+    "members": [
+      {
+        "name": "Aanya Hudda",
+        "role": "Team Lead",
+        "pronouns": "he/him",
+        "bio": "Aanya bio...",
+        "concentration": "Computer Science...",
+        "email": "aanya_hudda@brown.edu",
+        "year": "2025",
+        "portfolio": ""
+      }
+    ],
+    "alumni": [
+        {
+            "name": "Alum 1",
+            "role": "Website Contributor",
+            "year": ""
+        }
+    ]
+  },
+  {
+    "team": "Privacy",
+    "members": [
+      {
+        "name": "Connor Flick",
+        "role": "Primer Author",
+        "pronouns": "he/him",
+        "bio": "Connor bio..."
+      }
+    ],
+    "alumni": []
+  },
+  { "team": "AI", "members": [], "alumni": [] },
+  { "team": "Accessibility", "members": [], "alumni": [] }
+]
