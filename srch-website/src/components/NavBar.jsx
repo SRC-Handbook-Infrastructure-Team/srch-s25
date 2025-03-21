@@ -1,58 +1,62 @@
 import React from 'react'
 
+import structure from "../markdown/structure.json"
+
 import {
     Link,
     useLocation
 } from 'react-router-dom'
 import {
+    Box,
     Drawer,
     DrawerContent,
     DrawerHeader,
     DrawerBody,
     List,
-    ListItem
+    ListItem,
+    Text
 } from '@chakra-ui/react'
 
-function NavBar() {
-    const currLocation = useLocation()
-    // TODO: Maybe cut the front of this to just get the current path
-    const currPath = location.pathname
-    // cuts the first '/srch-s25'
-    const currPathPruned = currPath.slice(9)
+function parse_structure_json(structure,currPath, prevPath=""){
+  return structure.map((item, index) => {
+    const itemPath = `${prevPath}/${item.link}`;
+    const isActive = currPath === itemPath;
     
-    console.log(currPathPruned);
+    return (
+      <ListItem key={index}>
+        <Box bg={isActive ? "gray.100" : "transparent"} py={1}>
+          <Link to={itemPath}>
+            <Text fontWeight={isActive ? "bold" : "medium"}>
+              {item.id + ". " + item.title}
+            </Text>
+          </Link>
+        </Box>
+
+        {item.subpages && item.subpages.length > 0 && (
+          <List pl={2}>
+            {parse_structure_json(item.subpages, currPath, itemPath)}
+          </List>
+        )}
+      </ListItem>
+    );
+  });
+}
+
+function NavBar() {
+  const currPath = useLocation().pathname;
   return (
     <>
       {/* Always want this drawer to be open */}
-      <Drawer isOpen={true} placement="left">
+      <Drawer isOpen={true} placement="left" zIndex={10}>
         {/* TODO: styling of border */}
-        <DrawerContent borderRight="2px solid black">
+        <DrawerContent borderRight="2px solid #E5EBF3">
           <Link to="/">
             <DrawerHeader>SRC Handbook</DrawerHeader>
           </Link>
 
           <DrawerBody>
-            {/* TODO: Probably want this to parse MD somehow to get the file structure */}
+            <List>{parse_structure_json(structure, currPath)}</List>
             {/* TODO: Background: make it more extensible (a function to automatically set background) + Styling */}
-            <List>
-              <ListItem bg={currPathPruned == "/" ? "gray.100" : "transparent"}>
-                <Link to="/">Home</Link>
-              </ListItem>
-              <ListItem
-                bg={currPathPruned == "/ai" ? "gray.100" : "transparent"}
-              >
-                <Link to="/ai">1. Fairness and Justice</Link>
-                {/* TODO: Styling of sublist */}
-                <List pl={4}>
-                  <ListItem>
-                    <Link>1.c.i Subitem 1</Link>
-                  </ListItem>
-                  <ListItem>
-                    <Link>1.c.ii Subitem 2</Link>
-                  </ListItem>
-                </List>
-              </ListItem>
-            </List>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

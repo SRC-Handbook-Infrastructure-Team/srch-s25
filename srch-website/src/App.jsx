@@ -15,11 +15,9 @@ function App() {
   return (
     <ChakraProvider>
       <BrowserRouter basename="/srch-s25/">
-        {/* TODO: add the navbar on the App so it appears on every page */}
         <NavBar/>
-        {/* <Home */}
-        {/* TODO: add more paths for everything */}
-
+        {/* TODO: with the markdown parser, this can pull from the structure.json */}
+        {/* Create a path for all the link */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/ai" element={<Newpage />} />

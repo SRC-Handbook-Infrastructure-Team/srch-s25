@@ -1,0 +1,40 @@
+[
+    {
+        "id": "1",
+        "title": "Fairness & Justice",
+        "link": "fairness", 
+        "subpages": [
+            {
+              "id": "a",
+              "title": "Subpage 1",
+              "link": "subpage_1",
+              "subpages": [
+                {
+                  "id": "i",
+                  "title": "SubSubPage",
+                  "link": "subpage1ai",
+                  "subpages": []
+                }
+              ]
+            },
+            {
+              "id": "b",
+              "title": "Subpage 2",
+              "link": "subpage_2",
+              "subpages": []
+            }
+        ]
+    },
+    {
+      "id": "2",
+      "title": "Data & AI: Accuracy, Fairness, Justice",
+      "link": "data",
+      "subpages": []
+    },
+    { 
+      "id": "3",
+      "title": "Communication and Public Discourse",
+      "link": "communication",
+      "subpages": []
+    }
+]
