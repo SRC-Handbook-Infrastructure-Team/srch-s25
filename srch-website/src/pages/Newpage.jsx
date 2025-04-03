@@ -3,7 +3,7 @@ import { Box, Heading, Text, Divider } from '@chakra-ui/react'
 
 function Newpage() {
   return (
-    <Box maxW="800px" m="0" p="2rem">
+    <Box maxW="800px" m="0" p="2rem" textAlign="left">
       {/* Section heading */}
       <Heading as="h1" size="lg" fontWeight="bold" fontFamily="heading">
         2.c.i - Abbrv Name
