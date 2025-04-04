@@ -121,7 +121,17 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
     // Define component rendering for Markdown elements
     const components = useMemo(() => ({
         // Headings
-        h1: (props) => <Heading as="h1" size="xl" mt={5} mb={3} {...props} />,
+        h1: (props) => (
+            <Heading 
+                as="h1" 
+                fontFamily="'Lora', serif" 
+                fontWeight="bold"  
+                fontSize="36px" 
+                lineHeight="1.2"
+                mt={6} mb={2} 
+                {...props} 
+            />
+        ),
         h2: (props) => {
             // Create an ID from the heading for anchor links - use the same ID generation
             // as in parseSubsections to ensure they match exactly
@@ -129,11 +139,12 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
             return (
                 <Heading 
                     as="h2" 
-                    id={id} 
-                    size="lg" 
-                    mt={4} 
-                    mb={2} 
-                    scrollMarginTop="20px" // Adds margin at top when scrolled to
+                    fontFamily="'Lora', serif" 
+                    fontWeight="normal" 
+                    fontSize="20px" 
+                    lineHeight="1.4" 
+                    mt={5} mb={3} 
+                    scrollMarginTop="20px" 
                     {...props} 
                 />
             );
@@ -142,7 +153,16 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
         h4: (props) => <Heading as="h4" size="sm" mt={2} mb={1} {...props} />,
         
         // Text elements
-        p: (props) => <Text mb={3} {...props} />,
+        p: (props) => (
+            <Text 
+            fontFamily="'Open Sans', sans-serif" 
+            fontWeight="normal" 
+            fontSize="16px" 
+            lineHeight="1.6" 
+            color="gray.700" 
+            mb={4} 
+            {...props} />
+        ),
         a: (props) => <Link color="blue.500" {...props} />,
         
         // Lists
