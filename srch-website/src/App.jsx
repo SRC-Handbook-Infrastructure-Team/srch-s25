@@ -1,28 +1,20 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import Newpage from './pages/Newpage'
 import NavBar from './components/NavBar'
-
-
+import MarkdownPage from './pages/MarkdownPage'
+import Home from './pages/Home'
 
 function App() {
   return (
     <ChakraProvider>
       <BrowserRouter basename="/srch-s25/">
-        {/* TODO: add the navbar on the App so it appears on every page */}
-        <NavBar/>
-        {/* <Home */}
-        {/* TODO: add more paths for everything */}
-
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/ai" element={<Newpage />} />
+          <Route path="/:fileId" element={<MarkdownPage />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
