@@ -3,13 +3,14 @@ import './App.css'
 
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import theme from './theme'
 import NavBar from './components/NavBar'
 import MarkdownPage from './pages/MarkdownPage'
 import Home from './pages/Home'
 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <BrowserRouter basename="/srch-s25/">
         <NavBar />
         <Routes>
