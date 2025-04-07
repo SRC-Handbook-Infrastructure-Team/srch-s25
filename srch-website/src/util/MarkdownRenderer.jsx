@@ -45,11 +45,14 @@ export const getMainFiles = async () => {
         const files = [];
         for (const path in mainFiles) {
             const content = await mainFiles[path]();
-            const fileName = path.split('/').pop().replace('.md', '');
+            const filePath = path.split('/').pop();
+            const [fileOrder, fileName] = filePath.replace('.md', '').split("_");
             const title = content.split('\n')[0].replace('# ', '');
             
             files.push({
+                // TODO: we need to add an id to this
                 id: fileName,
+                order: fileOrder,
                 title,
                 content
             });
@@ -65,6 +68,7 @@ export const getMainFiles = async () => {
 // Get a specific drawer markdown file
 export const getDrawerFile = async (fileId) => {
     try {
+        // Import the file in as a string
         const module = await import(`../markdown/drawer_files/${fileId}.md?raw`);
         return module.default;
     } catch (error) {
@@ -129,7 +133,7 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
             return (
                 <Heading 
                     as="h2" 
-                    id={id} 
+                    id={id}
                     size="lg" 
                     mt={4} 
                     mb={2} 
@@ -157,6 +161,7 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
                 : <Box as="pre" p={2} bg="gray.100" borderRadius="md" overflowX="auto" {...props} />
         ),
         
+        // TODO: Improve this styling to match the Figma
         // Custom components for interactive elements
         'drawer-link': ({ node }) => {
             const text = node.properties?.text;
@@ -188,6 +193,8 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
         }
     }), [onDrawerOpen, onNavigation]);
 
+    // Return ReactMarkdown component as specified.
+    // rehypeRaw helps handle HTML parsing 
     return (
         <div>
             <ReactMarkdown

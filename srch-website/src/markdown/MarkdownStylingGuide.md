@@ -8,8 +8,9 @@ The SRC Handbook content is organized into two types of Markdown files:
 
 1. **Main Files**: Content displayed as main pages
    - Stored in: `/src/markdown/main_files/`
-   - Example: `fairness.md`, `data-ai.md`
+   - Example: `1_fairness.md`, `2_data-ai.md`
    - Each main file becomes a section in the sidebar navigation
+   - Each file should have an "order" ("1") and a "name" ("fairness") which will determine its order in the Navbar
 
 2. **Drawer Files**: Additional content displayed in side drawers
    - Stored in: `/src/markdown/drawer_files/`

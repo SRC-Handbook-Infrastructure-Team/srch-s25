@@ -103,6 +103,8 @@ function NavBar() {
     const loadMainFiles = async () => {
       try {
         const files = await getMainFiles();
+        console.log("LOGGING FILES")
+        console.log(files)
         setMainFiles(files);
         
         // Parse subsections for each file
@@ -155,7 +157,8 @@ function NavBar() {
       <Divider mb={4} />
       
       <VStack align="stretch" spacing={2}>
-        {mainFiles.map((file) => (
+        {/* Exclude the Home page file */}
+        {mainFiles.filter((file) => file.order > 0).map((file) => (
           <Box key={file.id} mb={2}>
             <Link to={`/${file.id}`}>
               <Text 
@@ -164,7 +167,7 @@ function NavBar() {
                 bg={currentFileId === file.id ? "gray.100" : "transparent"}
                 borderRadius="md"
               >
-                {file.title}
+                {file.order}. {file.title}
               </Text>
             </Link>
             
@@ -174,7 +177,7 @@ function NavBar() {
                 {subsections[file.id].map((subsection) => (
                   <Link 
                     key={subsection.id} 
-                    to={`/${file.id}#${subsection.id}`}
+                    to={`/srch-s25/${file.id}#${subsection.id}`}
                     onClick={(e) => {
                       // If we're already on this page, force the scroll effect
                       if (currentFileId === file.id) {
@@ -182,7 +185,7 @@ function NavBar() {
                         const element = document.getElementById(subsection.id);
                         if (element) {
                           // Update the URL without full navigation
-                          window.history.pushState(null, '', `/${file.id}#${subsection.id}`);
+                          window.history.pushState(null, '', `/srch-s25/${file.id}#${subsection.id}`);
                           // Scroll to the element
                           element.scrollIntoView({ behavior: 'smooth' });
                         }
