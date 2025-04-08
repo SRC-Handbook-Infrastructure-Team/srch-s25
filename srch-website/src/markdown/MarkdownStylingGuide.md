@@ -4,21 +4,14 @@ This guide explains how to format content for the SRC Handbook using Markdown, i
 
 ## File Organization
 
-The SRC Handbook content is organized into two types of Markdown files:
-
-1. **Main Files**: Content displayed as main pages
-   - Stored in: `/src/markdown/main_files/`
-   - Example: `1_fairness.md`, `2_data-ai.md`
-   - Each main file becomes a section in the sidebar navigation
-   - Each file should have an "order" ("1") and a "name" ("fairness") which will determine its order in the Navbar
-
-2. **Drawer Files**: Additional content displayed in side drawers
-   - Stored in: `/src/markdown/drawer_files/`
-   - Example: `individual-fairness.md`, `group-fairness.md`
-   - Referenced from main files using custom drawer links
+Please see this doc for file organization and Github integration:
+https://docs.google.com/document/d/18_hrqvaM_o6WYqzE8BGueqggZoz4aTqaD7KsHU-PLH8/edit?usp=sharing 
 
 ### Naming Conventions
+All the names of primers are provided here:
+https://docs.google.com/spreadsheets/d/1zHzBhybs3mzHWvth8qkHfZJffD7CxG0RNUSJkGreFAM/edit?usp=sharing
 
+Authors will name their own side panel .md files and reference them within their primer text main markdown page. Some guidance for naming side panel (drawer) files:
 - Use kebab-case for filenames (lowercase words separated by hyphens)
 - Make names descriptive but concise
 - Don't include spaces or special characters
@@ -177,7 +170,8 @@ Content about limitations...
    - Keep H2 headings concise and descriptive
 
 5. **Images**: 
-   - Store images in `/src/assets/` directory
+   - Store images in the google drive folder here: https://drive.google.com/drive/folders/1e_KtpJ8lLyJ6zLZ472FpDMgvZgFBuFU1?usp=sharing
+   - File path will be `/src/assets/imagename.jpg` 
    - Reference with standard Markdown: `![Alt text](/path/to/image.jpg)`
 
 6. **Code Blocks**:
@@ -237,5 +231,3 @@ There are several metrics used to measure group fairness:
 1. **Demographic Parity**: The proportion of positive decisions should be equal across groups.
 2. **Equal Opportunity**: True positive rates should be equal across groups.
 ```
-
-Remember that well-structured content with proper use of custom links will create a better experience for users navigating the handbook. 
