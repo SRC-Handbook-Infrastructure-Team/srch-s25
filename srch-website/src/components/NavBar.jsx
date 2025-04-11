@@ -137,13 +137,13 @@ function NavBar() {
   const currentFileId = getCurrentFileId();
   
   return (
-    <Box 
-      position="fixed" 
-      left={0} 
-      top={0} 
-      width="250px" 
-      height="100vh" 
-      borderRight="1px solid" 
+    <Box
+      position="fixed"
+      left={0}
+      top={0}
+      width="250px"
+      height="100vh"
+      borderRight="1px solid"
       borderColor="gray.200"
       bg="white"
       overflowY="auto"
@@ -151,61 +151,97 @@ function NavBar() {
       zIndex={10}
     >
       <Link to="/">
-        <Text fontSize="xl" fontWeight="bold" mb={4}>SRC Handbook</Text>
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
+          SRC Handbook
+        </Text>
       </Link>
-      
+
       <Divider mb={4} />
-      
+
       <VStack align="stretch" spacing={2}>
         {/* Exclude the Home page file */}
-        {mainFiles.filter((file) => file.order > 0).map((file) => (
-          <Box key={file.id} mb={2}>
-            <Link to={`/${file.id}`}>
-              <Text 
-                fontWeight="medium" 
-                p={2}
-                bg={currentFileId === file.id ? "gray.100" : "transparent"}
-                borderRadius="md"
-              >
-                {file.order}. {file.title}
-              </Text>
-            </Link>
-            
-            {/* Show subsections if this is the current file */}
-            {subsections[file.id] && currentFileId === file.id && (
-              <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                {subsections[file.id].map((subsection) => (
-                  <Link 
-                    key={subsection.id} 
-                    to={`/srch-s25/${file.id}#${subsection.id}`}
-                    onClick={(e) => {
-                      // If we're already on this page, force the scroll effect
-                      if (currentFileId === file.id) {
-                        e.preventDefault();
-                        const element = document.getElementById(subsection.id);
-                        if (element) {
-                          // Update the URL without full navigation
-                          window.history.pushState(null, '', `/srch-s25/${file.id}#${subsection.id}`);
-                          // Scroll to the element
-                          element.scrollIntoView({ behavior: 'smooth' });
+        {mainFiles
+          .filter((file) => file.order > 0)
+          .map((file) => (
+            <Box key={file.id} mb={2}>
+              <Link to={`/${file.id}`}>
+                <Text
+                  fontWeight="medium"
+                  p={2}
+                  bg={currentFileId === file.id ? "gray.100" : "transparent"}
+                  borderRadius="md"
+                >
+                  {file.order}. {file.title}
+                </Text>
+              </Link>
+
+              {/* Show subsections if this is the current file */}
+              {subsections[file.id] && currentFileId === file.id && (
+                <VStack align="stretch" pl={4} mt={1} spacing={0}>
+                  {subsections[file.id].map((subsection) => (
+                    <Link
+                      key={subsection.id}
+                      to={`/srch-s25/${file.id}#${subsection.id}`}
+                      onClick={(e) => {
+                        // If we're already on this page, force the scroll effect
+                        if (currentFileId === file.id) {
+                          e.preventDefault();
+                          const element = document.getElementById(
+                            subsection.id
+                          );
+                          if (element) {
+                            // Update the URL without full navigation
+                            window.history.pushState(
+                              null,
+                              "",
+                              `/srch-s25/${file.id}#${subsection.id}`
+                            );
+                            // Scroll to the element
+                            element.scrollIntoView({ behavior: "smooth" });
+                          }
                         }
-                      }
-                    }}
-                  >
-                    <Text 
-                      fontSize="sm" 
-                      p={1}
-                      fontWeight={currentSection === subsection.id ? "bold" : "normal"}
-                      color={currentSection === subsection.id ? "blue.500" : "inherit"}
+                      }}
                     >
-                      {subsection.title}
-                    </Text>
-                  </Link>
-                ))}
-              </VStack>
-            )}
-          </Box>
-        ))}
+                      <Text
+                        fontSize="sm"
+                        p={1}
+                        fontWeight={
+                          currentSection === subsection.id ? "bold" : "normal"
+                        }
+                        color={
+                          currentSection === subsection.id
+                            ? "blue.500"
+                            : "inherit"
+                        }
+                      >
+                        {subsection.title}
+                      </Text>
+                    </Link>
+                  ))}
+                </VStack>
+              )}
+            </Box>
+          ))}
+        <Box mb={2}>
+          {/* */}
+          <Link to="/acknowledgements">
+            <Text p={2}>About us</Text>
+          </Link>
+          <VStack align="stretch" pl={4} mt={1} spacing={0}>
+            <Link to="/acknowledgements/ai">
+              <Text>AI Team</Text>
+            </Link>
+            <Link to="/acknowledgements/privacy">
+              <Text>Privacy Team</Text>
+            </Link>
+            <Link to="/acknowledgements/accessibility">
+              <Text>Accessibility Team</Text>
+            </Link>
+            <Link to="/acknowledgements/product">
+              <Text>Product Team</Text>
+            </Link>
+          </VStack>
+        </Box>
       </VStack>
     </Box>
   );

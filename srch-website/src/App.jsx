@@ -7,6 +7,7 @@ import theme from './theme'
 import NavBar from './components/NavBar'
 import MarkdownPage from './pages/MarkdownPage'
 import Home from './pages/Home'
+import {About, AboutTeam} from './pages/About'
 
 function App() {
   return (
@@ -16,6 +17,24 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/:fileId" element={<MarkdownPage />} />
+          {/* TODO: fix these paths*/}
+          <Route path="/acknowledgements" element={<About />} />
+          <Route
+            path="/acknowledgements/ai"
+            element={<AboutTeam teamName="ai" />}
+          />
+          <Route
+            path="/acknowledgements/privacy"
+            element={<AboutTeam teamName="privacy" />}
+          />
+          <Route
+            path="/acknowledgements/accessibility"
+            element={<AboutTeam teamName="accessibility" />}
+          />
+          <Route
+            path="/acknowledgements/product"
+            element={<AboutTeam teamName="product" />}
+          />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
