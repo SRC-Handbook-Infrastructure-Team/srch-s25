@@ -225,7 +225,7 @@ function NavBar() {
         <Box mb={2}>
           {/* */}
           <Link to="/acknowledgements">
-            <Text p={2}>About us</Text>
+            <Text p={2}>Acknowledgements</Text>
           </Link>
           <VStack align="stretch" pl={4} mt={1} spacing={0}>
             <Link to="/acknowledgements/ai">
@@ -239,6 +239,9 @@ function NavBar() {
             </Link>
             <Link to="/acknowledgements/product">
               <Text>Product Team</Text>
+            </Link>
+            <Link to="/acknowledgements/additional">
+              <Text>Additional Contributors</Text>
             </Link>
           </VStack>
         </Box>

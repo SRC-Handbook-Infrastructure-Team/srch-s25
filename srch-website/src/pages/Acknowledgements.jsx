@@ -6,19 +6,15 @@ import {
   SimpleGrid,
   Link,
   Flex,
-  UnorderedList,
-  OrderedList,
-  ListItem,
   Box,
-  Code,
   Image,
-  Button,
 } from "@chakra-ui/react";
-import team from "../team.json"
-
+import team from "../team.json";
 
 function TeamGrid({ filteredTeam }) {
   return (
+    // TODO: fix this for mobile, honestly fix everything for mobile
+    // TODO: add a past members section
     <SimpleGrid columns={4} spacing={4}>
       {/* Map through photo cards */}
       {filteredTeam.map((member) => (
@@ -54,40 +50,41 @@ function TeamGrid({ filteredTeam }) {
   );
 }
 
-function About() {
-    const onlyLeaders = team.filter((member) => member.team == "N/A")
+function Acknowledgements() {
+  const onlyLeaders = team.filter((member) => member.team == "N/A");
   // TODO: need to add Michelle and them here
+  //   TODO: external link for website, linkedin icon for linkedin
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
-      <Heading as="h1" size="xl" mt={5} mb={3}>About us</Heading>
-      <Text>
-        Here's some information about the project! We do great work! Lorem ipsum
-        dolor sit amet...
-      </Text>
+      <Heading as="h1" size="xl" mt={5} mb={3}>
+        About us
+      </Heading>
+      <Text>TODO: This page will be Acknowledgements</Text>
       <Text>And thank you to our our wonderful project coordinators!</Text>
-      <TeamGrid filteredTeam={onlyLeaders}/>
+      <TeamGrid filteredTeam={onlyLeaders} />
     </div>
   );
 }
 
-function AboutTeam({ teamName }){
-    console.log(team)
-    const filteredTeam = team.filter((member) => member.team === teamName);
+function Team({ teamName }) {
+  console.log(team);
+  const filteredTeam = team.filter((member) => member.team === teamName);
+  const isActive = filteredTeam.filter((member) => member.isActive);
 
-    const nameToTitleMap = {
-        "ai" : "AI",
-        "privacy" : "Privacy",
-        "accessibility" : "Accessibility",
-        "product" : "Product"
-    }
-    return (
-      <div style={{ padding: "20px", marginLeft: "250px" }}>
-        <Heading as="h1" size="xl" mt={5} mb={3}>
-          Meet the {nameToTitleMap[teamName]} team!
-        </Heading>
-        <TeamGrid filteredTeam={filteredTeam}/>
-      </div>
-    );
+  const nameToTitleMap = {
+    ai: "AI",
+    privacy: "Privacy",
+    accessibility: "Accessibility",
+    product: "Product",
+  };
+  return (
+    <div style={{ padding: "20px", marginLeft: "250px" }}>
+      <Heading as="h1" size="xl" mt={5} mb={3}>
+        Meet the {nameToTitleMap[teamName]} team!
+      </Heading>
+      <TeamGrid filteredTeam={filteredTeam} />
+    </div>
+  );
 }
 
-export {About, AboutTeam};
+export { Acknowledgements, Team };
