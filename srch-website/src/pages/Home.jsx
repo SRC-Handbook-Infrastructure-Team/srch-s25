@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import MarkdownPage from './MarkdownPage';
 
 // Home component redirects to About page
 function Home() {
