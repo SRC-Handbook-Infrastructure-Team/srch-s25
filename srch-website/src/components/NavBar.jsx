@@ -13,10 +13,14 @@ import {
   DrawerCloseButton,
   DrawerHeader,
   DrawerBody,
-  useMediaQuery
+  useMediaQuery,
+  Button
 } from '@chakra-ui/react';
 // import { HamburgerIcon } from '@chakra-ui/icons';
 import { getMainFiles, parseSubsections } from '../util/MarkdownRenderer';
+import { GiHamburgerMenu } from "react-icons/gi";
+import { CiMenuBurger } from "react-icons/ci";
+
 
 function NavBar() {
   const location = useLocation();
@@ -151,16 +155,11 @@ function NavBar() {
   if (isMobile) {
     return (
       <>
-        <IconButton
-          aria-label="Open menu"
-          icon={<img src='../assets/burger.svg' alt="Menu" style={{ width: '24px', height: '24px', filter: 'invert(1)' }} />}
+        <Button
+          variant="ghost"
+          leftIcon={<GiHamburgerMenu size="40px" />}
+          pl={6}
           onClick={onOpen}
-          position="fixed"
-          top={4}
-          left={4}
-          zIndex={20}
-          bg="white"
-          _hover={{ bg: "gray.100" }}
         />
         <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
           <DrawerOverlay />
