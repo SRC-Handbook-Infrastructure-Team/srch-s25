@@ -121,7 +121,9 @@ function Team({ teamName }) {
 }
 
 function AdditionalContributors(){
-  const contributors = team.filter((member) => member.team == "additional")
+  const contributors = team.filter((member) => member.team == "additional").sort((a, b) =>
+    a.name.localeCompare(b.name)
+  )
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading>Additional Contributors</Heading>
