@@ -88,7 +88,7 @@ export const getSections = async () => {
     const sections = [];
     const paths = Object.keys(allMarkdownFiles);
     const processedSections = new Set();
-
+    console.log("ALL MARKDOWN", paths)
     // Find all top-level sections with their markdown files
     for (const path of paths) {
       const segments = path.split("/");

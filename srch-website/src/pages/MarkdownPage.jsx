@@ -1,36 +1,16 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import {
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerContent,
-  DrawerCloseButton,
-  useToast,
-} from "@chakra-ui/react";
-import MarkdownRenderer, {
-  getSections,
-  getSubsections,
-  getContent,
-  getDrawerFile,
-  parseSubsections,
-} from "../util/MarkdownRenderer";
-=======
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Box, Drawer, DrawerBody, DrawerHeader, DrawerContent, DrawerCloseButton, useMediaQuery } from '@chakra-ui/react';
 import MarkdownRenderer, { getMainFiles, getDrawerFile } from '../util/MarkdownRenderer';
->>>>>>> f1ea7cb (feat: collapseable navbar)
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
   const { sectionId, subsectionId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
-  
+
   // State for content
   const [mainContent, setMainContent] = useState("");
   const [drawerContent, setDrawerContent] = useState("");

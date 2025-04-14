@@ -1,4 +1,6 @@
 import MarkdownPage from './MarkdownPage';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Home component redirects to About page
 function Home() {
@@ -6,7 +8,7 @@ function Home() {
 
   useEffect(() => {
     // Redirect to About page on component mount
-    navigate("/about");
+    navigate("/acknowledgements");
   }, [navigate]);
 
   // Return null while redirecting
