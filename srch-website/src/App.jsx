@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
@@ -17,7 +16,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/:fileId" element={<MarkdownPage />} />
-          {/* TODO: fix these paths*/}
           <Route path="/acknowledgements" element={<Acknowledgements />} />
           <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
           <Route
@@ -36,7 +34,6 @@ function App() {
             path="/acknowledgements/additional"
             element={<AdditionalContributors />}
           />
-          {/* TODO: Add additional contributors for this...  */}
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

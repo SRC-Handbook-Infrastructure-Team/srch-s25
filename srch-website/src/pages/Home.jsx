@@ -1,7 +1,3 @@
-import React from 'react'
-import { Box, Heading } from '@chakra-ui/react'
-import MarkdownRenderer from '../util/MarkdownRenderer'
-import testMD from '../markdown/test.md?raw'
 import MarkdownPage from './MarkdownPage';
 
 // Home component is now just a wrapper for MarkdownPage

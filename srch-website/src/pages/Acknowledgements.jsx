@@ -1,4 +1,3 @@
-import React from "react";
 import { MdEmail } from "react-icons/md";
 import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import {
@@ -20,8 +19,7 @@ function TeamGrid({ filteredTeam }) {
     a.name.localeCompare(b.name)
   );
   return (
-    // TODO: fix this for mobile, honestly fix everything for mobile
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
       {/* Map through photo cards */}
       {sortedTeam.map((member) => (
         <Box
