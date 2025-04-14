@@ -1,4 +1,8 @@
-# Selection Bias
+---
+title: Selection Bias
+---
+
+# Selection Bias (MOCK)
 
 Selection bias occurs when the data used to train algorithms is not representative of the population on which the algorithm will be applied.
 

@@ -3,7 +3,7 @@ title: Bias in Algorithms
 order: 3
 ---
 
-# Bias in Algorithms
+# Bias in Algorithms (MOCK)
 
 This primer explores different types of bias that can appear in algorithmic systems and their implications for fairness and equity.
 

@@ -1,4 +1,8 @@
-# Contextual Integrity Theory
+---
+title: Contextual Integrity Theory
+---
+
+# Contextual Integrity Theory (MOCK)
 
 Contextual Integrity (CI) is a privacy framework developed by Helen Nissenbaum that suggests privacy violations occur when information flows in ways that breach context-specific norms.
 

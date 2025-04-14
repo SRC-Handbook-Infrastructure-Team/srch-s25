@@ -2,7 +2,7 @@
 title: Procedural Fairness
 ---
 
-# Procedural Fairness
+# Procedural Fairness (MOCK)
 
 Procedural fairness focuses on the process by which decisions are made rather than the outcomes. It emphasizes transparency, consistency, and the right to be heard.
 

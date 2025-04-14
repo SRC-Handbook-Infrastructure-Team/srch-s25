@@ -2,7 +2,7 @@
 title: Group Fairness
 ---
 
-# Group Fairness
+# Group Fairness (MOCK)
 
 Group fairness focuses on ensuring that protected groups (defined by attributes like race, gender, age, etc.) receive equitable treatment or outcomes from algorithmic systems.
 

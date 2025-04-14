@@ -2,7 +2,7 @@
 title: Individual Fairness
 ---
 
-# Individual Fairness
+# Individual Fairness (MOCK)
 
 Individual fairness is based on the principle that "similar individuals should be treated similarly." This concept originates from work by Dwork et al. (2012).
 

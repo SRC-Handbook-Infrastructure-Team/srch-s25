@@ -3,7 +3,7 @@ title: What Is Privacy?
 order: 1
 ---
 
-# What Is Privacy?
+# What Is Privacy? (MOCK)
 
 This primer explores different conceptions and definitions of privacy in the digital age.
 

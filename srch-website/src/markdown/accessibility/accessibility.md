@@ -3,7 +3,7 @@ title: Accessibility
 order: 5
 ---
 
-# Accessibility
+# Accessibility (MOCK)
 
 This section explores the principles, practices, and importance of digital accessibility for all users, regardless of ability.
 

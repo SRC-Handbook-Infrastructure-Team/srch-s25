@@ -3,7 +3,7 @@ title: Automated Decision Making
 order: 2
 ---
 
-# Automated Decision Making
+# Automated Decision Making (MOCK)
 
 This section contains research primers on topics related to automated decision making systems and their impacts.
 

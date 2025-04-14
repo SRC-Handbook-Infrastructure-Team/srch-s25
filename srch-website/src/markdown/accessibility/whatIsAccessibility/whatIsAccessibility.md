@@ -3,7 +3,7 @@ title: What Is Accessibility?
 order: 1
 ---
 
-# What Is Accessibility?
+# What Is Accessibility? (MOCK)
 
 This primer introduces the concept of accessibility in digital technologies and explains why it matters for all users.
 

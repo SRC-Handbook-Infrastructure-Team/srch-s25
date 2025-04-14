@@ -1,4 +1,8 @@
-# Perceivability Examples
+---
+title: Perceivability Examples
+---
+
+# Perceivability Examples (MOCK)
 
 Perceivable content ensures that users can identify content and interface elements through one or more of their senses.
 

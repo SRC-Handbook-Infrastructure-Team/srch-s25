@@ -3,7 +3,7 @@ title: About This Website
 order: 1
 ---
 
-# About This Website
+# About This Website (MOCK)
 
 This website contains research primers on various topics related to regulation and policy for technology systems.
 
