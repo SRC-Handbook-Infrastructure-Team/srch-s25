@@ -20,7 +20,6 @@ function TeamGrid({ filteredTeam }) {
   );
   return (
     // TODO: fix this for mobile, honestly fix everything for mobile
-    // TODO: add a past members section
     <SimpleGrid py={4} columns={3} spacing={4}>
       {/* Map through photo cards */}
       {sortedTeam.map((member) => (
@@ -30,17 +29,14 @@ function TeamGrid({ filteredTeam }) {
           flexDirection="column"
           alignItems="center"
           textAlign="center"
-          p={4}
-          boxShadow="sm"
-          bg="gray.100"
+          p={2}
         >
-          {/* TODO: Photos */}
-
           <Image
             src={member.photo ? `/srch-s25/member-photos/${member.photo}` : `/srch-s25/member-photos/temp-photo.jpg`}
             alt={member.photo || "Default photo"}
-            boxSize="200px" // Sets a fixed size for the image
+            boxSize="250px" // Sets a fixed size for the image
             objectFit="cover" // Ensures the image is cropped proportionally
+            borderRadius="lg"
           />
           <Flex align="center" gap={2} mb={2}>
             <Text fontWeight="bold">{member.name}</Text>
@@ -61,8 +57,6 @@ function TeamGrid({ filteredTeam }) {
           <Text fontSize="sm">
             {member.position} | {member.pronouns}
           </Text>
-          {/* <Text fontSize="sm">{member.pronouns}</Text> */}
-          {/* TODO: recommend that this should just be Ph.D. */}
           <Text fontSize="sm">
             {member.degree}, {member.gradYear}
           </Text>
@@ -74,8 +68,6 @@ function TeamGrid({ filteredTeam }) {
 
 function Acknowledgements() {
   const onlyLeaders = team.filter((member) => member.team == "N/A");
-  // TODO: need to add Michelle and them here
-  //   TODO: external link for website, linkedin icon for linkedin
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
