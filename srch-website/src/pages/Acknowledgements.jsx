@@ -1,6 +1,6 @@
 import React from "react";
 import { MdEmail } from "react-icons/md";
-import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
+import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa"
 import {
   Text,
   Heading,
@@ -10,7 +10,6 @@ import {
   Box,
   Image,
   Divider,
-  useMediaQuery
 } from "@chakra-ui/react";
 import team from "../team.json";
 
@@ -21,7 +20,8 @@ function TeamGrid({ filteredTeam }) {
   );
   return (
     // TODO: fix this for mobile, honestly fix everything for mobile
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
+    // TODO: add a past members section
+    <SimpleGrid py={4} columns={3} spacing={4}>
       {/* Map through photo cards */}
       {sortedTeam.map((member) => (
         <Box
@@ -30,18 +30,17 @@ function TeamGrid({ filteredTeam }) {
           flexDirection="column"
           alignItems="center"
           textAlign="center"
-          p={2}
+          p={4}
+          boxShadow="sm"
+          bg="gray.100"
         >
+          {/* TODO: Photos */}
+
           <Image
-            src={
-              member.photo
-                ? `/srch-s25/member-photos/${member.photo}`
-                : `/srch-s25/member-photos/temp-photo.jpg`
-            }
+            src={member.photo ? `/srch-s25/member-photos/${member.photo}` : `/srch-s25/member-photos/temp-photo.jpg`}
             alt={member.photo || "Default photo"}
-            boxSize="250px" // Sets a fixed size for the image
+            boxSize="200px" // Sets a fixed size for the image
             objectFit="cover" // Ensures the image is cropped proportionally
-            borderRadius="lg"
           />
           <Flex align="center" gap={2} mb={2}>
             <Text fontWeight="bold">{member.name}</Text>
@@ -62,6 +61,8 @@ function TeamGrid({ filteredTeam }) {
           <Text fontSize="sm">
             {member.position} | {member.pronouns}
           </Text>
+          {/* <Text fontSize="sm">{member.pronouns}</Text> */}
+          {/* TODO: recommend that this should just be Ph.D. */}
           <Text fontSize="sm">
             {member.degree}, {member.gradYear}
           </Text>
@@ -77,7 +78,7 @@ function Acknowledgements() {
   return (
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
-        Acknowledgements
+        Acknowledgements 
       </Heading>
       <Text>Thank you to our wonderful project coordinators!</Text>
       <TeamGrid filteredTeam={onlyLeaders} />
@@ -90,7 +91,6 @@ function Team({ teamName }) {
   const filteredTeam = team.filter((member) => member.team === teamName);
   const isActive = filteredTeam.filter((member) => member.active == "true");
   const notActive = filteredTeam.filter((member) => member.active == "false");
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const nameToTitleMap = {
     ai: "AI",
@@ -120,10 +120,8 @@ function Team({ teamName }) {
   );
 }
 
-function AdditionalContributors() {
-  const contributors = team
-    .filter((member) => member.team == "additional")
-    .sort((a, b) => a.name.localeCompare(b.name));
+function AdditionalContributors(){
+  const contributors = team.filter((member) => member.team == "additional")
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading>Additional Contributors</Heading>

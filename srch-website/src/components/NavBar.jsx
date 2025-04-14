@@ -104,159 +104,8 @@ function NavBar() {
   // The ID of the file that's currently active
   const currentFileId = getCurrentFileId();
 
-  const NavContent = () => (
-    <VStack align="stretch" spacing={2}>
-      <Link to="/">
-        <Text fontSize="xl" fontWeight="bold" mb={4}>
-          SRC Handbook
-        </Text>
-      </Link>
-
-      <Divider mb={4} />
-
-      {/* Main navigation items */}
-      {mainFiles
-        .filter((file) => file.order > 0)
-        .map((file) => (
-          <Box key={file.id} mb={2}>
-            <Link to={`/${file.id}`}>
-              <Text
-                fontWeight="medium"
-                p={2}
-                bg={currentFileId === file.id ? "gray.100" : "transparent"}
-                borderRadius="md"
-              >
-                {file.order}. {file.title}
-              </Text>
-            </Link>
-
-            {/* Show subsections if this is the current file */}
-            {subsections[file.id] && currentFileId === file.id && (
-              <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                {subsections[file.id].map((subsection) => (
-                  <Link
-                    key={subsection.id}
-                    to={`/srch-s25/${file.id}#${subsection.id}`}
-                    onClick={(e) => {
-                      if (currentFileId === file.id) {
-                        e.preventDefault();
-                        const element = document.getElementById(subsection.id);
-                        if (element) {
-                          window.history.pushState(
-                            null,
-                            "",
-                            `/srch-s25/${file.id}#${subsection.id}`
-                          );
-                          element.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }
-                    }}
-                  >
-                    <Text
-                      fontSize="sm"
-                      p={1}
-                      fontWeight={
-                        currentSection === subsection.id ? "bold" : "normal"
-                      }
-                      color={
-                        currentSection === subsection.id
-                          ? "blue.500"
-                          : "inherit"
-                      }
-                    >
-                      {subsection.title}
-                    </Text>
-                  </Link>
-                ))}
-              </VStack>
-            )}
-          </Box>
-        ))}
-
-      {/* Acknowledgements section */}
-
-      <Box mb={2}>
-        {/* TODO: only make the sub menus show if it is selected*/}
-        <Link to="/acknowledgements">
-          <Text p={2}>Acknowledgements</Text>
-        </Link>
-        {currPath.includes("acknowledgements") && (
-          <VStack align="stretch" pl={4} mt={1} spacing={0}>
-            <Link to="/acknowledgements/ai">
-              <Text fontSize="sm" p={1}>
-                AI Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/privacy">
-              <Text fontSize="sm" p={1}>
-                Privacy Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/accessibility">
-              <Text fontSize="sm" p={1}>
-                Accessibility Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/product">
-              <Text fontSize="sm" p={1}>
-                Product Team
-              </Text>
-            </Link>
-            <Link to="/acknowledgements/additional">
-              <Text fontSize="sm" p={1}>
-                Additional Contributors
-              </Text>
-            </Link>
-          </VStack>
-        )}
-      </Box>
-      {/* <Box mb={2}>
-        <Link to="/acknowledgements">
-          <Text p={2}>Acknowledgements</Text>
-        </Link>
-        <VStack align="stretch" pl={4} mt={1} spacing={0}>
-          <Link to="/acknowledgements/ai">
-            <Text>AI Team</Text>
-          </Link>
-          <Link to="/acknowledgements/privacy">
-            <Text>Privacy Team</Text>
-          </Link>
-          <Link to="/acknowledgements/accessibility">
-            <Text>Accessibility Team</Text>
-          </Link>
-          <Link to="/acknowledgements/product">
-            <Text>Product Team</Text>
-          </Link>
-          <Link to="/acknowledgements/additional">
-            <Text>Additional Contributors</Text>
-          </Link>
-        </VStack>
-      </Box> */}
-    </VStack>
-  );
-
-  if (isMobile) {
-    return (
-      <>
-        <Button
-          variant="ghost"
-          leftIcon={<GiHamburgerMenu size="40px" />}
-          pl={6}
-          onClick={onOpen}
-        />
-        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerBody>
-              <NavContent />
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
-      </>
-    );
-  }
-
+  console.log("FILE ID", currPath)
+  
   return (
     <Box
       position="fixed"
@@ -271,7 +120,114 @@ function NavBar() {
       p={4}
       zIndex={10}
     >
-      <NavContent />
+      <Link to="/">
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
+          SRC Handbook
+        </Text>
+      </Link>
+
+      <Divider mb={4} />
+
+      <VStack align="stretch" spacing={2}>
+        {/* Exclude the Home page file */}
+        {mainFiles
+          .filter((file) => file.order > 0)
+          .map((file) => (
+            <Box key={file.id} mb={2}>
+              <Link to={`/${file.id}`}>
+                <Text
+                  fontWeight="medium"
+                  p={2}
+                  bg={currentFileId === file.id ? "gray.100" : "transparent"}
+                  borderRadius="md"
+                >
+                  {file.order}. {file.title}
+                </Text>
+              </Link>
+
+              {/* Show subsections if this is the current file */}
+              {subsections[file.id] && currentFileId === file.id && (
+                <VStack align="stretch" pl={4} mt={1} spacing={0}>
+                  {subsections[file.id].map((subsection) => (
+                    <Link
+                      key={subsection.id}
+                      to={`/srch-s25/${file.id}#${subsection.id}`}
+                      onClick={(e) => {
+                        // If we're already on this page, force the scroll effect
+                        if (currentFileId === file.id) {
+                          e.preventDefault();
+                          const element = document.getElementById(
+                            subsection.id
+                          );
+                          if (element) {
+                            // Update the URL without full navigation
+                            window.history.pushState(
+                              null,
+                              "",
+                              `/srch-s25/${file.id}#${subsection.id}`
+                            );
+                            // Scroll to the element
+                            element.scrollIntoView({ behavior: "smooth" });
+                          }
+                        }
+                      }}
+                    >
+                      <Text
+                        fontSize="sm"
+                        p={1}
+                        fontWeight={
+                          currentSection === subsection.id ? "bold" : "normal"
+                        }
+                        color={
+                          currentSection === subsection.id
+                            ? "blue.500"
+                            : "inherit"
+                        }
+                      >
+                        {subsection.title}
+                      </Text>
+                    </Link>
+                  ))}
+                </VStack>
+              )}
+            </Box>
+          ))}
+        <Box mb={2}>
+          {/* TODO: only make the sub menus show if it is selected*/}
+          <Link to="/acknowledgements">
+            <Text p={2}>Acknowledgements</Text>
+          </Link>
+          {currPath.includes("acknowledgements") && (
+            <VStack align="stretch" pl={4} mt={1} spacing={0}>
+              <Link to="/acknowledgements/ai">
+                <Text fontSize="sm" p={1}>
+                  AI Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/privacy">
+                <Text fontSize="sm" p={1}>
+                  Privacy Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/accessibility">
+                <Text fontSize="sm" p={1}>
+                  Accessibility Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/product">
+                <Text fontSize="sm" p={1}>
+                  Product Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/additional">
+                <Text fontSize="sm" p={1}>
+                  Additional Contributors
+                </Text>
+              </Link>
+            </VStack>
+          )}
+        </Box>
+      </VStack>
     </Box>
   );
 }
