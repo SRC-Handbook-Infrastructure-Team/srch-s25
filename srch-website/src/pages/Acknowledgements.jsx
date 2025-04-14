@@ -8,14 +8,13 @@ import {
   Flex,
   Box,
   Image,
+  useMediaQuery
 } from "@chakra-ui/react";
 import team from "../team.json";
 
 function TeamGrid({ filteredTeam }) {
   return (
-    // TODO: fix this for mobile, honestly fix everything for mobile
-    // TODO: add a past members section
-    <SimpleGrid columns={4} spacing={4}>
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
       {/* Map through photo cards */}
       {filteredTeam.map((member) => (
         <Box
@@ -52,10 +51,11 @@ function TeamGrid({ filteredTeam }) {
 
 function Acknowledgements() {
   const onlyLeaders = team.filter((member) => member.team == "N/A");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
   // TODO: need to add Michelle and them here
   //   TODO: external link for website, linkedin icon for linkedin
   return (
-    <div style={{ padding: "20px", marginLeft: "250px" }}>
+    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
         About us
       </Heading>
@@ -70,6 +70,7 @@ function Team({ teamName }) {
   console.log(team);
   const filteredTeam = team.filter((member) => member.team === teamName);
   const isActive = filteredTeam.filter((member) => member.isActive);
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const nameToTitleMap = {
     ai: "AI",
@@ -78,7 +79,7 @@ function Team({ teamName }) {
     product: "Product",
   };
   return (
-    <div style={{ padding: "20px", marginLeft: "250px" }}>
+    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
         Meet the {nameToTitleMap[teamName]} team!
       </Heading>
