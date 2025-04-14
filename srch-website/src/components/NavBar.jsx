@@ -16,10 +16,8 @@ import {
   useMediaQuery,
   Button
 } from '@chakra-ui/react';
-// import { HamburgerIcon } from '@chakra-ui/icons';
 import { getMainFiles, parseSubsections } from '../util/MarkdownRenderer';
 import { GiHamburgerMenu } from "react-icons/gi";
-import { CiMenuBurger } from "react-icons/ci";
 
 
 function NavBar() {
@@ -105,7 +103,11 @@ function NavBar() {
                         e.preventDefault();
                         const element = document.getElementById(subsection.id);
                         if (element) {
-                          window.history.pushState(null, "", `/srch-s25/${file.id}#${subsection.id}`);
+                          window.history.pushState(
+                            null,
+                            "",
+                            `/srch-s25/${file.id}#${subsection.id}`
+                          );
                           element.scrollIntoView({ behavior: "smooth" });
                         }
                       }
@@ -114,8 +116,14 @@ function NavBar() {
                     <Text
                       fontSize="sm"
                       p={1}
-                      fontWeight={currentSection === subsection.id ? "bold" : "normal"}
-                      color={currentSection === subsection.id ? "blue.500" : "inherit"}
+                      fontWeight={
+                        currentSection === subsection.id ? "bold" : "normal"
+                      }
+                      color={
+                        currentSection === subsection.id
+                          ? "blue.500"
+                          : "inherit"
+                      }
                     >
                       {subsection.title}
                     </Text>
@@ -127,7 +135,43 @@ function NavBar() {
         ))}
 
       {/* Acknowledgements section */}
+
       <Box mb={2}>
+        {/* TODO: only make the sub menus show if it is selected*/}
+        <Link to="/acknowledgements">
+          <Text p={2}>Acknowledgements</Text>
+        </Link>
+        {currPath.includes("acknowledgements") && (
+          <VStack align="stretch" pl={4} mt={1} spacing={0}>
+            <Link to="/acknowledgements/ai">
+              <Text fontSize="sm" p={1}>
+                AI Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/privacy">
+              <Text fontSize="sm" p={1}>
+                Privacy Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/accessibility">
+              <Text fontSize="sm" p={1}>
+                Accessibility Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/product">
+              <Text fontSize="sm" p={1}>
+                Product Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/additional">
+              <Text fontSize="sm" p={1}>
+                Additional Contributors
+              </Text>
+            </Link>
+          </VStack>
+        )}
+      </Box>
+      {/* <Box mb={2}>
         <Link to="/acknowledgements">
           <Text p={2}>Acknowledgements</Text>
         </Link>
@@ -148,7 +192,7 @@ function NavBar() {
             <Text>Additional Contributors</Text>
           </Link>
         </VStack>
-      </Box>
+      </Box> */}
     </VStack>
   );
 

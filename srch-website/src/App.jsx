@@ -7,7 +7,7 @@ import theme from "./theme";
 import NavBar from "./components/NavBar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import { Acknowledgements, Team } from "./pages/Acknowledgements";
+import { Acknowledgements, AdditionalContributors, Team } from "./pages/Acknowledgements";
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
           />
           <Route
             path="/acknowledgements/additional"
-            element={<Team teamName="additional" />}
+            element={<AdditionalContributors />}
           />
           {/* TODO: Add additional contributors for this...  */}
         </Routes>
