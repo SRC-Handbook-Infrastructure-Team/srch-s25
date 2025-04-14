@@ -14,12 +14,16 @@ import {
 import team from "../team.json";
 
 function TeamGrid({ filteredTeam }) {
+  // Sort alphabetically
+  const sortedTeam = [...filteredTeam].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
   return (
     // TODO: fix this for mobile, honestly fix everything for mobile
     // TODO: add a past members section
     <SimpleGrid py={4} columns={3} spacing={4}>
       {/* Map through photo cards */}
-      {filteredTeam.map((member) => (
+      {sortedTeam.map((member) => (
         <Box
           key={member.id}
           display="flex"
@@ -118,7 +122,9 @@ function Team({ teamName }) {
 }
 
 function AdditionalContributors(){
-  const contributors = team.filter((member) => member.team == "additional")
+  const contributors = team.filter((member) => member.team == "additional").sort((a, b) =>
+    a.name.localeCompare(b.name)
+  )
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading>Additional Contributors</Heading>
