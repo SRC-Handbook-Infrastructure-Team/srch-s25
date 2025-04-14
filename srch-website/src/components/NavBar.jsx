@@ -135,6 +135,8 @@ function NavBar() {
   
   // The ID of the file that's currently active
   const currentFileId = getCurrentFileId();
+
+  console.log("FILE ID", currPath)
   
   return (
     <Box
@@ -223,27 +225,39 @@ function NavBar() {
             </Box>
           ))}
         <Box mb={2}>
-          {/* */}
+          {/* TODO: only make the sub menus show if it is selected*/}
           <Link to="/acknowledgements">
             <Text p={2}>Acknowledgements</Text>
           </Link>
-          <VStack align="stretch" pl={4} mt={1} spacing={0}>
-            <Link to="/acknowledgements/ai">
-              <Text>AI Team</Text>
-            </Link>
-            <Link to="/acknowledgements/privacy">
-              <Text>Privacy Team</Text>
-            </Link>
-            <Link to="/acknowledgements/accessibility">
-              <Text>Accessibility Team</Text>
-            </Link>
-            <Link to="/acknowledgements/product">
-              <Text>Product Team</Text>
-            </Link>
-            <Link to="/acknowledgements/additional">
-              <Text>Additional Contributors</Text>
-            </Link>
-          </VStack>
+          {currPath.includes("acknowledgements") && (
+            <VStack align="stretch" pl={4} mt={1} spacing={0}>
+              <Link to="/acknowledgements/ai">
+                <Text fontSize="sm" p={1}>
+                  AI Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/privacy">
+                <Text fontSize="sm" p={1}>
+                  Privacy Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/accessibility">
+                <Text fontSize="sm" p={1}>
+                  Accessibility Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/product">
+                <Text fontSize="sm" p={1}>
+                  Product Team
+                </Text>
+              </Link>
+              <Link to="/acknowledgements/additional">
+                <Text fontSize="sm" p={1}>
+                  Additional Contributors
+                </Text>
+              </Link>
+            </VStack>
+          )}
         </Box>
       </VStack>
     </Box>
