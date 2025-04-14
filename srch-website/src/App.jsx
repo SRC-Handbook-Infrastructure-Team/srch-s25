@@ -16,8 +16,10 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/:fileId" element={<MarkdownPage />} />
-          {/* TODO: fix these paths*/}
+          <Route path="/:sectionId" element={<MarkdownPage />} />
+          <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
+
+          {/* Acknowledgements paths */}
           <Route path="/acknowledgements" element={<Acknowledgements />} />
           <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
           <Route
@@ -36,7 +38,6 @@ function App() {
             path="/acknowledgements/additional"
             element={<Team teamName="additional" />}
           />
-          {/* TODO: Add additional contributors for this...  */}
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
