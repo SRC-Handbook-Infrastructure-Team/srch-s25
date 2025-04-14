@@ -67,6 +67,22 @@ function NavBar() {
 
   const NavContent = () => (
     <VStack align="stretch" spacing={2}>
+//   console.log("FILE ID", currPath)
+  
+//   return (
+//     <Box
+//       position="fixed"
+//       left={0}
+//       top={0}
+//       width="250px"
+//       height="100vh"
+//       borderRight="1px solid"
+//       borderColor="gray.200"
+//       bg="white"
+//       overflowY="auto"
+//       p={4}
+//       zIndex={10}
+//     >
       <Link to="/">
         <Text fontSize="xl" fontWeight="bold" mb={4}>
           SRC Handbook
@@ -233,6 +249,62 @@ function NavBar() {
       zIndex={10}
     >
       <NavContent />
+//                       <Text
+//                         fontSize="sm"
+//                         p={1}
+//                         fontWeight={
+//                           currentSection === subsection.id ? "bold" : "normal"
+//                         }
+//                         color={
+//                           currentSection === subsection.id
+//                             ? "blue.500"
+//                             : "inherit"
+//                         }
+//                       >
+//                         {subsection.title}
+//                       </Text>
+//                     </Link>
+//                   ))}
+//                 </VStack>
+//               )}
+//             </Box>
+//           ))}
+//         <Box mb={2}>
+//           {/* TODO: only make the sub menus show if it is selected*/}
+//           <Link to="/acknowledgements">
+//             <Text p={2}>Acknowledgements</Text>
+//           </Link>
+//           {currPath.includes("acknowledgements") && (
+//             <VStack align="stretch" pl={4} mt={1} spacing={0}>
+//               <Link to="/acknowledgements/ai">
+//                 <Text fontSize="sm" p={1}>
+//                   AI Team
+//                 </Text>
+//               </Link>
+//               <Link to="/acknowledgements/privacy">
+//                 <Text fontSize="sm" p={1}>
+//                   Privacy Team
+//                 </Text>
+//               </Link>
+//               <Link to="/acknowledgements/accessibility">
+//                 <Text fontSize="sm" p={1}>
+//                   Accessibility Team
+//                 </Text>
+//               </Link>
+//               <Link to="/acknowledgements/product">
+//                 <Text fontSize="sm" p={1}>
+//                   Product Team
+//                 </Text>
+//               </Link>
+//               <Link to="/acknowledgements/additional">
+//                 <Text fontSize="sm" p={1}>
+//                   Additional Contributors
+//                 </Text>
+//               </Link>
+//             </VStack>
+//           )}
+//         </Box>
+//       </VStack>
     </Box>
   );
 }

@@ -33,11 +33,7 @@ function TeamGrid({ filteredTeam }) {
           p={2}
         >
           <Image
-            src={
-              member.photo
-                ? `/srch-s25/member-photos/${member.photo}`
-                : `/srch-s25/member-photos/temp-photo.jpg`
-            }
+            src={member.photo ? `/srch-s25/member-photos/${member.photo}` : `/srch-s25/member-photos/temp-photo.jpg`}
             alt={member.photo || "Default photo"}
             boxSize="250px" // Sets a fixed size for the image
             objectFit="cover" // Ensures the image is cropped proportionally
@@ -120,10 +116,11 @@ function Team({ teamName }) {
   );
 }
 
-function AdditionalContributors() {
-  const contributors = team
-    .filter((member) => member.team == "additional")
-    .sort((a, b) => a.name.localeCompare(b.name));
+
+function AdditionalContributors(){
+  const contributors = team.filter((member) => member.team == "additional").sort((a, b) =>
+    a.name.localeCompare(b.name)
+  )
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading>Additional Contributors</Heading>

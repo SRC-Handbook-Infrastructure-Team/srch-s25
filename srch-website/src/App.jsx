@@ -7,7 +7,7 @@ import theme from "./theme";
 import NavBar from "./components/NavBar";
 import MarkdownPage from "./pages/MarkdownPage";
 import Home from "./pages/Home";
-import { Acknowledgements, AdditionalContributors, Team } from "./pages/Acknowledgements";
+import { Acknowledgements, Team, AdditionalContributors } from "./pages/Acknowledgements";
 
 function App() {
   return (
