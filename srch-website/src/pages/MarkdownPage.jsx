@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Box, Drawer, DrawerBody, DrawerHeader, DrawerContent, DrawerCloseButton } from '@chakra-ui/react';
+import { Box, Drawer, DrawerBody, DrawerHeader, DrawerContent, DrawerCloseButton, useMediaQuery } from '@chakra-ui/react';
 import MarkdownRenderer, { getMainFiles, getDrawerFile } from '../util/MarkdownRenderer';
 
 function MarkdownPage() {
@@ -8,6 +8,7 @@ function MarkdownPage() {
   const { fileId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
   
   // State for content
   const [mainContent, setMainContent] = useState('');
@@ -89,7 +90,7 @@ function MarkdownPage() {
   }, [mainContent, location.hash]); // Respond to both content changes and hash changes
   
   return (
-    <div style={{ padding: '20px', marginLeft: '250px' }}>
+    <div style={{ padding: '20px', marginLeft: isMobile ? '0' : '250px' }}>
       {/* Main content */}
       {mainContent && (
         <MarkdownRenderer 

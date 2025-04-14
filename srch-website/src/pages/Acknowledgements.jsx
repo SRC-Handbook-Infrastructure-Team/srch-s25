@@ -1,6 +1,6 @@
 import React from "react";
 import { MdEmail } from "react-icons/md";
-import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa"
+import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import {
   Text,
   Heading,
@@ -10,6 +10,7 @@ import {
   Box,
   Image,
   Divider,
+  useMediaQuery
 } from "@chakra-ui/react";
 import team from "../team.json";
 
@@ -20,7 +21,7 @@ function TeamGrid({ filteredTeam }) {
   );
   return (
     // TODO: fix this for mobile, honestly fix everything for mobile
-    <SimpleGrid py={4} columns={3} spacing={4}>
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
       {/* Map through photo cards */}
       {sortedTeam.map((member) => (
         <Box
@@ -68,10 +69,11 @@ function TeamGrid({ filteredTeam }) {
 
 function Acknowledgements() {
   const onlyLeaders = team.filter((member) => member.team == "N/A");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
   return (
-    <div style={{ padding: "20px", marginLeft: "250px" }}>
+    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
-        Acknowledgements 
+        Acknowledgements
       </Heading>
       <Text>Thank you to our wonderful project coordinators!</Text>
       <TeamGrid filteredTeam={onlyLeaders} />
@@ -84,6 +86,7 @@ function Team({ teamName }) {
   const filteredTeam = team.filter((member) => member.team === teamName);
   const isActive = filteredTeam.filter((member) => member.active == "true");
   const notActive = filteredTeam.filter((member) => member.active == "false");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const nameToTitleMap = {
     ai: "AI",
@@ -92,7 +95,7 @@ function Team({ teamName }) {
     product: "Product",
   };
   return (
-    <div style={{ padding: "20px", marginLeft: "250px" }}>
+    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
         {nameToTitleMap[teamName]} Team
       </Heading>
@@ -112,6 +115,7 @@ function Team({ teamName }) {
     </div>
   );
 }
+
 
 function AdditionalContributors(){
   const contributors = team.filter((member) => member.team == "additional").sort((a, b) =>
