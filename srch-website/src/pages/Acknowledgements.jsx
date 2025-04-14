@@ -1,5 +1,6 @@
 import React from "react";
 import { MdEmail } from "react-icons/md";
+import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa"
 import {
   Text,
   Heading,
@@ -8,39 +9,54 @@ import {
   Flex,
   Box,
   Image,
+  Divider,
 } from "@chakra-ui/react";
 import team from "../team.json";
 
 function TeamGrid({ filteredTeam }) {
+  // Sort alphabetically
+  const sortedTeam = [...filteredTeam].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
   return (
     // TODO: fix this for mobile, honestly fix everything for mobile
-    // TODO: add a past members section
-    <SimpleGrid columns={4} spacing={4}>
+    <SimpleGrid py={4} columns={3} spacing={4}>
       {/* Map through photo cards */}
-      {filteredTeam.map((member) => (
+      {sortedTeam.map((member) => (
         <Box
           key={member.id}
           display="flex"
           flexDirection="column"
-          p={4}
-          boxShadow="sm"
-          bg="gray.100"
+          alignItems="center"
+          textAlign="center"
+          p={2}
         >
-          {/* TODO: Photos */}
-          <Image src="/srch-s25/member-photos/temp-photo.jpg" />
+          <Image
+            src={member.photo ? `/srch-s25/member-photos/${member.photo}` : `/srch-s25/member-photos/temp-photo.jpg`}
+            alt={member.photo || "Default photo"}
+            boxSize="250px" // Sets a fixed size for the image
+            objectFit="cover" // Ensures the image is cropped proportionally
+            borderRadius="lg"
+          />
           <Flex align="center" gap={2} mb={2}>
-            <Link href={member.linkedin} isExternal fontWeight="bold">
-              {member.name}
-            </Link>
+            <Text fontWeight="bold">{member.name}</Text>
             <Link href={`mailto:${member.email}`} isExternal>
               <MdEmail />
             </Link>
+            {member.linkedin && (
+              <Link href={member.linkedin} isExternal>
+                <FaLinkedin />
+              </Link>
+            )}
+            {member.website && (
+              <Link href={member.website} isExternal>
+                <FaExternalLinkAlt />
+              </Link>
+            )}
           </Flex>
-          <Text fontStyle="italic" fontSize="sm">
-            {member.position}
+          <Text fontSize="sm">
+            {member.position} | {member.pronouns}
           </Text>
-          <Text fontSize="sm">{member.pronouns}</Text>
-          {/* TODO: recommend that this should just be Ph.D. */}
           <Text fontSize="sm">
             {member.degree}, {member.gradYear}
           </Text>
@@ -52,15 +68,12 @@ function TeamGrid({ filteredTeam }) {
 
 function Acknowledgements() {
   const onlyLeaders = team.filter((member) => member.team == "N/A");
-  // TODO: need to add Michelle and them here
-  //   TODO: external link for website, linkedin icon for linkedin
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
-        About us
+        Acknowledgements 
       </Heading>
-      <Text>TODO: This page will be Acknowledgements</Text>
-      <Text>And thank you to our our wonderful project coordinators!</Text>
+      <Text>Thank you to our wonderful project coordinators!</Text>
       <TeamGrid filteredTeam={onlyLeaders} />
     </div>
   );
@@ -69,7 +82,8 @@ function Acknowledgements() {
 function Team({ teamName }) {
   console.log(team);
   const filteredTeam = team.filter((member) => member.team === teamName);
-  const isActive = filteredTeam.filter((member) => member.isActive);
+  const isActive = filteredTeam.filter((member) => member.active == "true");
+  const notActive = filteredTeam.filter((member) => member.active == "false");
 
   const nameToTitleMap = {
     ai: "AI",
@@ -80,11 +94,55 @@ function Team({ teamName }) {
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
-        Meet the {nameToTitleMap[teamName]} team!
+        {nameToTitleMap[teamName]} Team
       </Heading>
-      <TeamGrid filteredTeam={filteredTeam} />
+      <Divider my={4} borderColor="gray.300" />{" "}
+      <Heading as="h2" size="lg" fontWeight="normal">
+        Current Team Members
+      </Heading>
+      <TeamGrid filteredTeam={isActive} />
+      {notActive.length > 0 && (
+        <>
+          <Heading as="h2" size="lg" fontWeight="normal">
+            Past Team Members
+          </Heading>
+          <TeamGrid filteredTeam={notActive} />
+        </>
+      )}
     </div>
   );
 }
 
-export { Acknowledgements, Team };
+function AdditionalContributors(){
+  const contributors = team.filter((member) => member.team == "additional").sort((a, b) =>
+    a.name.localeCompare(b.name)
+  )
+  return (
+    <div style={{ padding: "20px", marginLeft: "250px" }}>
+      <Heading>Additional Contributors</Heading>
+      <Divider my={4} borderColor="gray.300" />{" "}
+      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
+        User Studies
+      </Heading>
+      <Text my={4}>
+        Thank you to everyone who participated in our user studies! Your
+        feedback has been immensely valuable as we work towards improving our
+        content and design! ...
+      </Text>
+      {contributors.map((member) => (
+        <Text key={member.id}>
+          {member.name}, <i>{member.position}</i>
+        </Text>
+      ))}
+      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
+        Advisors
+      </Heading>
+      <Text my={4}>
+        Thank you to everyone who advised our research teams! Your feedback has
+        been immensely valuable as we develop and refine our primers! ...
+      </Text>
+    </div>
+  );
+}
+
+export { Acknowledgements, Team, AdditionalContributors };
