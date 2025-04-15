@@ -10,7 +10,6 @@ function MarkdownPage() {
   const location = useLocation();
   const toast = useToast();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
-
   // State for content
   const [mainContent, setMainContent] = useState("");
   const [drawerContent, setDrawerContent] = useState("");

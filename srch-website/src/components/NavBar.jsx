@@ -283,7 +283,6 @@ function NavBar() {
       </Box>
     </VStack>
   );
-  
   if (isMobile) {
     return (
       <>
