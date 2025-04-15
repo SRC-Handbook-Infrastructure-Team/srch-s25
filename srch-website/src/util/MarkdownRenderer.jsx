@@ -9,11 +9,9 @@
  * - Parsing YAML frontmatter for title and order
  * - Generating sidebar navigation from markdown files and headers
  *
- * For a complete guide on how to format markdown content for this system,
- * see the MarkdownStylingGuide.md file in the /src/markdown/ directory.
  */
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import {
@@ -343,12 +341,12 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
         ),
 
       // Images
-      img: (props) => {
-        const src = props.src.startsWith("/src/assets/")
-          ? props.src
-          : `/src/assets/${props.src}`;
-        return <Image src={src} alt={props.alt || ""} my={4} maxW="100%" />;
-      },
+      // img: (props) => {
+      //   const src = props.src.startsWith("/src/assets/")
+      //     ? props.src
+      //     : `/src/assets/${props.src}`;
+      //   return <Image src={src} alt={props.alt || ""} my={4} maxW="100%" />;
+      // },
 
       // Custom components for interactive elements
       "drawer-link": ({ node }) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -29,11 +29,9 @@ import {
 function NavBar() {
   const location = useLocation();
   const currPath = location.pathname;
-  const currPathPruned = currPath.slice(currPath.lastIndexOf('/') + 1);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   
-  const [mainFiles, setMainFiles] = useState([]);
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
