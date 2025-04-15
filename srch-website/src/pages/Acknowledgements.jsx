@@ -1,5 +1,5 @@
 import { MdEmail } from "react-icons/md";
-import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
+import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa"
 import {
   Text,
   Heading,
@@ -71,7 +71,7 @@ function Acknowledgements() {
   return (
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
-        Acknowledgements
+        Acknowledgements 
       </Heading>
       <Text>Thank you to our wonderful project coordinators!</Text>
       <TeamGrid filteredTeam={onlyLeaders} />
@@ -113,7 +113,6 @@ function Team({ teamName }) {
     </div>
   );
 }
-
 
 function AdditionalContributors(){
   const contributors = team.filter((member) => member.team == "additional").sort((a, b) =>

@@ -15,7 +15,10 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/:fileId" element={<MarkdownPage />} />
+          <Route path="/:sectionId" element={<MarkdownPage />} />
+          <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
+
+          {/* Acknowledgements paths */}
           <Route path="/acknowledgements" element={<Acknowledgements />} />
           <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
           <Route

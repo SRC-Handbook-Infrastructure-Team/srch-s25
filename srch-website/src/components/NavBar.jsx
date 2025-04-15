@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
   Text,
   VStack,
   Divider,
+  Icon,
   useDisclosure,
   Drawer,
   DrawerOverlay,
@@ -12,10 +13,17 @@ import {
   DrawerCloseButton,
   DrawerBody,
   useMediaQuery,
-  Button
-} from '@chakra-ui/react';
-import { getMainFiles, parseSubsections } from '../util/MarkdownRenderer';
+  Button,
+} from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { parseSubsections } from '../util/MarkdownRenderer';
 import { GiHamburgerMenu } from "react-icons/gi";
+import {
+  getSections,
+  getSubsections,
+  // parseSubsections,
+  getContent,
+} from "../util/MarkdownRenderer";
 
 
 function NavBar() {
@@ -26,42 +34,113 @@ function NavBar() {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   
   const [mainFiles, setMainFiles] = useState([]);
+  const navigate = useNavigate();
+  const currentPath = location.pathname;
+  const pathParts = currentPath.split("/").filter(Boolean);
+
+  // Current section and subsection IDs from URL
+  const currentSectionId = pathParts[0] || "";
+  const currentSubsectionId = pathParts[1] || "";
+  const currentHeadingId = location.hash?.substring(1) || "";
+
+  // State
+  const [sections, setSections] = useState([]);
   const [subsections, setSubsections] = useState({});
-  
-  // Load main files on component mount
+  const [contentHeadings, setContentHeadings] = useState({});
+  const [expandedSections, setExpandedSections] = useState({});
+  const [hasFetchedData, setHasFetchedData] = useState(false);
+
+  // Load all sections and their metadata
   useEffect(() => {
-    const loadMainFiles = async () => {
+    async function loadAllData() {
       try {
-        const files = await getMainFiles();
-        setMainFiles(files);
-        
-        // Parse subsections for each file
-        const subsectionMap = {};
-        for (const file of files) {
-          subsectionMap[file.id] = parseSubsections(file.content);
+        // Load all sections
+        const sectionsData = await getSections();
+
+        // Sort sections by order
+        const sortedSections = [...sectionsData].sort(
+          (a, b) => a.order - b.order
+        );
+        setSections(sortedSections);
+
+        // Preload all subsections and determine which sections have them
+        const subsectionsMap = {};
+        const expandStateMap = {};
+
+        for (const section of sortedSections) {
+          const sectionSubsections = await getSubsections(section.id);
+
+          if (sectionSubsections.length > 0) {
+            // Store sorted subsections
+            subsectionsMap[section.id] = sectionSubsections.sort(
+              (a, b) => a.order - b.order
+            );
+
+            // If this is the current section, expand it
+            if (section.id === currentSectionId) {
+              expandStateMap[section.id] = true;
+            }
+          }
         }
-        setSubsections(subsectionMap);
+
+        setSubsections(subsectionsMap);
+        setExpandedSections(expandStateMap);
+
+        // If we're on the root path, navigate to the first section
+        if (!currentSectionId && sortedSections.length > 0 && !hasFetchedData) {
+          navigate(`/${sortedSections[0].id}`);
+        }
+
+        // If we're viewing a subsection, load its content headings
+        if (currentSectionId && currentSubsectionId) {
+          const content = await getContent(
+            currentSectionId,
+            currentSubsectionId
+          );
+          if (content) {
+            const headings = parseSubsections(content);
+            setContentHeadings({
+              [`${currentSectionId}/${currentSubsectionId}`]: headings,
+            });
+          }
+        }
+
+        setHasFetchedData(true);
       } catch (error) {
-        console.error('Error loading markdown files:', error);
+        console.error("Error loading navigation data:", error);
       }
-    };
-    
-    loadMainFiles();
-  }, []);
-  
-  // Determine which file is current (for home page or direct URL access)
-  const getCurrentFileId = () => {
-    if (currPathPruned === '') {
-      return mainFiles.length > 0 ? mainFiles[0].id : '';
     }
-    return currPathPruned;
+
+    loadAllData();
+  }, [currentSectionId, currentSubsectionId, navigate, hasFetchedData]);
+
+  // Handle expanding/collapsing a section
+  const toggleSection = (sectionId, event) => {
+    // Only handle the expand/collapse icon click
+    if (event.target.tagName === "svg" || event.target.closest("svg")) {
+      event.preventDefault();
+      setExpandedSections((prev) => ({
+        ...prev,
+        [sectionId]: !prev[sectionId],
+      }));
+    }
   };
-  
-  // Get the current section from the hash (if any)
-  const currentSection = location.hash?.substring(1) || '';
-  
-  // The ID of the file that's currently active
-  const currentFileId = getCurrentFileId();
+
+  // Handle smooth scrolling for headings
+  const scrollToHeading = (headingId, e) => {
+    e.preventDefault();
+    const element = document.getElementById(headingId);
+    if (element) {
+      // Update URL without navigation
+      window.history.pushState(
+        null,
+        "",
+        `/srch-s25/${currentSectionId}/${currentSubsectionId}#${headingId}`
+      );
+      // Scroll smoothly
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const NavContent = () => (
     <VStack align="stretch" spacing={2}>
@@ -73,67 +152,100 @@ function NavBar() {
 
       <Divider mb={4} />
 
-      {/* Main navigation items */}
-      {mainFiles
-        .filter((file) => file.order > 0)
-        .map((file) => (
-          <Box key={file.id} mb={2}>
-            <Link to={`/${file.id}`}>
-              <Text
-                fontWeight="medium"
-                p={2}
-                bg={currentFileId === file.id ? "gray.100" : "transparent"}
-                borderRadius="md"
-              >
-                {file.order}. {file.title}
-              </Text>
-            </Link>
+      {sections.map((section) => {
+        const hasSubsections = subsections[section.id]?.length > 0;
+        const isExpanded = expandedSections[section.id];
+        const isActive = currentSectionId === section.id;
 
-            {/* Show subsections if this is the current file */}
-            {subsections[file.id] && currentFileId === file.id && (
+        return (
+          <Box key={section.id} mb={2}>
+            {/* Section header */}
+            <Box
+              p={2}
+              borderRadius="md"
+              bg={isActive && !currentSubsectionId ? "gray.100" : "transparent"}
+              cursor="pointer"
+              onClick={(e) => toggleSection(section.id, e)}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Link to={`/${section.id}`}>
+                <Text fontWeight="medium">{section.title}</Text>
+              </Link>
+
+              {/* Only show expand/collapse icon if section has subsections */}
+              {hasSubsections && (
+                <Icon
+                  as={ChevronDownIcon}
+                  transform={isExpanded ? "rotate(180deg)" : undefined}
+                  transition="transform 0.2s"
+                  w={5}
+                  h={5}
+                />
+              )}
+            </Box>
+
+            {/* Subsections */}
+            {isExpanded && hasSubsections && (
               <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                {subsections[file.id].map((subsection) => (
-                  <Link
-                    key={subsection.id}
-                    to={`/srch-s25/${file.id}#${subsection.id}`}
-                    onClick={(e) => {
-                      if (currentFileId === file.id) {
-                        e.preventDefault();
-                        const element = document.getElementById(subsection.id);
-                        if (element) {
-                          window.history.pushState(
-                            null,
-                            "",
-                            `/srch-s25/${file.id}#${subsection.id}`
-                          );
-                          element.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }
-                    }}
-                  >
-                    <Text
-                      fontSize="sm"
-                      p={1}
-                      fontWeight={
-                        currentSection === subsection.id ? "bold" : "normal"
-                      }
-                      color={
-                        currentSection === subsection.id
-                          ? "blue.500"
-                          : "inherit"
-                      }
-                    >
-                      {subsection.title}
-                    </Text>
-                  </Link>
-                ))}
+                {subsections[section.id].map((subsection) => {
+                  const isSubsectionActive =
+                    isActive && currentSubsectionId === subsection.id;
+                  const contentKey = `${section.id}/${subsection.id}`;
+                  const hasHeadings = contentHeadings[contentKey]?.length > 0;
+
+                  return (
+                    <Box key={subsection.id}>
+                      {/* Subsection link */}
+                      <Link to={`/${section.id}/${subsection.id}`}>
+                        <Text
+                          fontSize="sm"
+                          p={1}
+                          fontWeight={isSubsectionActive ? "bold" : "normal"}
+                          color={isSubsectionActive ? "blue.500" : "inherit"}
+                        >
+                          {subsection.title}
+                        </Text>
+                      </Link>
+
+                      {/* Content headings */}
+                      {isSubsectionActive && hasHeadings && (
+                        <VStack align="stretch" pl={4} mt={1} spacing={0}>
+                          {contentHeadings[contentKey].map((heading) => (
+                            <Link
+                              key={heading.id}
+                              to={`/${section.id}/${subsection.id}#${heading.id}`}
+                              onClick={(e) => scrollToHeading(heading.id, e)}
+                            >
+                              <Text
+                                fontSize="xs"
+                                p={1}
+                                fontWeight={
+                                  currentHeadingId === heading.id
+                                    ? "bold"
+                                    : "normal"
+                                }
+                                color={
+                                  currentHeadingId === heading.id
+                                    ? "blue.500"
+                                    : "gray.600"
+                                }
+                              >
+                                {heading.title}
+                              </Text>
+                            </Link>
+                          ))}
+                        </VStack>
+                      )}
+                    </Box>
+                  );
+                })}
               </VStack>
             )}
           </Box>
-        ))}
-
-      {/* Acknowledgements section */}
-
+        );
+      })}
       <Box mb={2}>
         {/* TODO: only make the sub menus show if it is selected*/}
         <Link to="/acknowledgements">
@@ -171,7 +283,6 @@ function NavBar() {
       </Box>
     </VStack>
   );
-
   if (isMobile) {
     return (
       <>
@@ -208,7 +319,7 @@ function NavBar() {
       p={4}
       zIndex={10}
     >
-      <NavContent />
+      <NavContent/>
     </Box>
   )
 }
