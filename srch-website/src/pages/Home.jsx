@@ -8,7 +8,7 @@ function Home() {
 
   useEffect(() => {
     // Redirect to About page on component mount
-    navigate("/acknowledgements");
+    navigate("/about");
   }, [navigate]);
 
   // Return null while redirecting

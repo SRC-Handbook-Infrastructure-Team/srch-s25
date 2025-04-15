@@ -56,7 +56,6 @@ function NavBar() {
       try {
         // Load all sections
         const sectionsData = await getSections();
-        console.log("SECTIONS DATA", sectionsData)
 
         // Sort sections by order
         const sortedSections = [...sectionsData].sort(
@@ -136,14 +135,176 @@ function NavBar() {
       window.history.pushState(
         null,
         "",
-        `/${currentSectionId}/${currentSubsectionId}#${headingId}`
+        `/srch-s25/${currentSectionId}/${currentSubsectionId}#${headingId}`
       );
       // Scroll smoothly
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  console.log(sections)
+  const NavContent = () => (
+    <VStack align="stretch" spacing={2}>
+      <Link to="/">
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
+          SRC Handbook
+        </Text>
+      </Link>
+
+      <Divider mb={4} />
+
+      {sections.map((section) => {
+        const hasSubsections = subsections[section.id]?.length > 0;
+        const isExpanded = expandedSections[section.id];
+        const isActive = currentSectionId === section.id;
+
+        return (
+          <Box key={section.id} mb={2}>
+            {/* Section header */}
+            <Box
+              p={2}
+              borderRadius="md"
+              bg={isActive && !currentSubsectionId ? "gray.100" : "transparent"}
+              cursor="pointer"
+              onClick={(e) => toggleSection(section.id, e)}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Link to={`/${section.id}`}>
+                <Text fontWeight="medium">{section.title}</Text>
+              </Link>
+
+              {/* Only show expand/collapse icon if section has subsections */}
+              {hasSubsections && (
+                <Icon
+                  as={ChevronDownIcon}
+                  transform={isExpanded ? "rotate(180deg)" : undefined}
+                  transition="transform 0.2s"
+                  w={5}
+                  h={5}
+                />
+              )}
+            </Box>
+
+            {/* Subsections */}
+            {isExpanded && hasSubsections && (
+              <VStack align="stretch" pl={4} mt={1} spacing={0}>
+                {subsections[section.id].map((subsection) => {
+                  const isSubsectionActive =
+                    isActive && currentSubsectionId === subsection.id;
+                  const contentKey = `${section.id}/${subsection.id}`;
+                  const hasHeadings = contentHeadings[contentKey]?.length > 0;
+
+                  return (
+                    <Box key={subsection.id}>
+                      {/* Subsection link */}
+                      <Link to={`/${section.id}/${subsection.id}`}>
+                        <Text
+                          fontSize="sm"
+                          p={1}
+                          fontWeight={isSubsectionActive ? "bold" : "normal"}
+                          color={isSubsectionActive ? "blue.500" : "inherit"}
+                        >
+                          {subsection.title}
+                        </Text>
+                      </Link>
+
+                      {/* Content headings */}
+                      {isSubsectionActive && hasHeadings && (
+                        <VStack align="stretch" pl={4} mt={1} spacing={0}>
+                          {contentHeadings[contentKey].map((heading) => (
+                            <Link
+                              key={heading.id}
+                              to={`/${section.id}/${subsection.id}#${heading.id}`}
+                              onClick={(e) => scrollToHeading(heading.id, e)}
+                            >
+                              <Text
+                                fontSize="xs"
+                                p={1}
+                                fontWeight={
+                                  currentHeadingId === heading.id
+                                    ? "bold"
+                                    : "normal"
+                                }
+                                color={
+                                  currentHeadingId === heading.id
+                                    ? "blue.500"
+                                    : "gray.600"
+                                }
+                              >
+                                {heading.title}
+                              </Text>
+                            </Link>
+                          ))}
+                        </VStack>
+                      )}
+                    </Box>
+                  );
+                })}
+              </VStack>
+            )}
+          </Box>
+        );
+      })}
+      <Box mb={2}>
+        {/* TODO: only make the sub menus show if it is selected*/}
+        <Link to="/acknowledgements">
+          <Text p={2}>Acknowledgements</Text>
+        </Link>
+        {currPath.includes("acknowledgements") && (
+          <VStack align="stretch" pl={4} mt={1} spacing={0}>
+            <Link to="/acknowledgements/ai">
+              <Text fontSize="sm" p={1}>
+                AI Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/privacy">
+              <Text fontSize="sm" p={1}>
+                Privacy Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/accessibility">
+              <Text fontSize="sm" p={1}>
+                Accessibility Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/product">
+              <Text fontSize="sm" p={1}>
+                Product Team
+              </Text>
+            </Link>
+            <Link to="/acknowledgements/additional">
+              <Text fontSize="sm" p={1}>
+                Additional Contributors
+              </Text>
+            </Link>
+          </VStack>
+        )}
+      </Box>
+    </VStack>
+  );
+  
+  if (isMobile) {
+    return (
+      <>
+        <Button
+          variant="ghost"
+          leftIcon={<GiHamburgerMenu size="40px" />}
+          pl={6}
+          onClick={onOpen}
+        />
+        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerBody>
+              <NavContent />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
 
   return (
     <Box
@@ -159,112 +320,7 @@ function NavBar() {
       p={4}
       zIndex={10}
     >
-      <Link to="/">
-        <Text fontSize="xl" fontWeight="bold" mb={4}>
-          SRC Handbook
-        </Text>
-      </Link>
-
-      <Divider mb={4} />
-
-      <VStack align="stretch" spacing={2}>
-        {sections.map((section) => {
-          const hasSubsections = subsections[section.id]?.length > 0;
-          const isExpanded = expandedSections[section.id];
-          const isActive = currentSectionId === section.id;
-
-          return (
-            <Box key={section.id} mb={2}>
-              {/* Section header */}
-              <Box
-                p={2}
-                borderRadius="md"
-                bg={
-                  isActive && !currentSubsectionId ? "gray.100" : "transparent"
-                }
-                cursor="pointer"
-                onClick={(e) => toggleSection(section.id, e)}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Link to={`/${section.id}`}>
-                  <Text fontWeight="medium">{section.title}</Text>
-                </Link>
-
-                {/* Only show expand/collapse icon if section has subsections */}
-                {hasSubsections && (
-                  <Icon
-                    as={ChevronDownIcon}
-                    transform={isExpanded ? "rotate(180deg)" : undefined}
-                    transition="transform 0.2s"
-                    w={5}
-                    h={5}
-                  />
-                )}
-              </Box>
-
-              {/* Subsections */}
-              {isExpanded && hasSubsections && (
-                <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                  {subsections[section.id].map((subsection) => {
-                    const isSubsectionActive =
-                      isActive && currentSubsectionId === subsection.id;
-                    const contentKey = `${section.id}/${subsection.id}`;
-                    const hasHeadings = contentHeadings[contentKey]?.length > 0;
-
-                    return (
-                      <Box key={subsection.id}>
-                        {/* Subsection link */}
-                        <Link to={`/${section.id}/${subsection.id}`}>
-                          <Text
-                            fontSize="sm"
-                            p={1}
-                            fontWeight={isSubsectionActive ? "bold" : "normal"}
-                            color={isSubsectionActive ? "blue.500" : "inherit"}
-                          >
-                            {subsection.title}
-                          </Text>
-                        </Link>
-
-                        {/* Content headings */}
-                        {isSubsectionActive && hasHeadings && (
-                          <VStack align="stretch" pl={4} mt={1} spacing={0}>
-                            {contentHeadings[contentKey].map((heading) => (
-                              <Link
-                                key={heading.id}
-                                to={`/${section.id}/${subsection.id}#${heading.id}`}
-                                onClick={(e) => scrollToHeading(heading.id, e)}
-                              >
-                                <Text
-                                  fontSize="xs"
-                                  p={1}
-                                  fontWeight={
-                                    currentHeadingId === heading.id
-                                      ? "bold"
-                                      : "normal"
-                                  }
-                                  color={
-                                    currentHeadingId === heading.id
-                                      ? "blue.500"
-                                      : "gray.600"
-                                  }
-                                >
-                                  {heading.title}
-                                </Text>
-                              </Link>
-                            ))}
-                          </VStack>
-                        )}
-                      </Box>
-                    );
-                  })}
-                </VStack>
-              )}
-            </Box>
-          );
-        })}
-      </VStack>
+      <NavContent/>
     </Box>
   )
 }
