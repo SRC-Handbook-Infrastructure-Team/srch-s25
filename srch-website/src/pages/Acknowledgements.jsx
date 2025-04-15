@@ -9,6 +9,7 @@ import {
   Box,
   Image,
   Divider,
+  useMediaQuery
 } from "@chakra-ui/react";
 import team from "../team.json";
 
@@ -66,6 +67,7 @@ function TeamGrid({ filteredTeam }) {
 
 function Acknowledgements() {
   const onlyLeaders = team.filter((member) => member.team == "N/A");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
   return (
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
@@ -82,6 +84,7 @@ function Team({ teamName }) {
   const filteredTeam = team.filter((member) => member.team === teamName);
   const isActive = filteredTeam.filter((member) => member.active == "true");
   const notActive = filteredTeam.filter((member) => member.active == "false");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const nameToTitleMap = {
     ai: "AI",

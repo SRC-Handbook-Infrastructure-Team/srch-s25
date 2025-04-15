@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Box, Drawer, DrawerBody, DrawerHeader, DrawerContent, DrawerCloseButton, useMediaQuery } from '@chakra-ui/react';
-import MarkdownRenderer, { getMainFiles, getDrawerFile } from '../util/MarkdownRenderer';
+import { Box, Drawer, DrawerBody, DrawerHeader, DrawerContent, DrawerCloseButton, useMediaQuery, useToast } from '@chakra-ui/react';
+import MarkdownRenderer, {  getDrawerFile, getContent, getSubsections } from '../util/MarkdownRenderer';
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
