@@ -1,20 +1,21 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import fs from "fs";
+import path from "path";
 
 export default defineConfig({
-  plugins: [react()],
-  base: "/srch-s25/",
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-        fallback: resolve(__dirname, "index.html"), // this creates 404.html
+  plugins: [
+    react(),
+    {
+      name: "copy-index-to-404",
+      apply: "build",
+      closeBundle() {
+        const indexPath = path.resolve(__dirname, "dist/index.html");
+        const notFoundPath = path.resolve(__dirname, "dist/404.html");
+        fs.copyFileSync(indexPath, notFoundPath);
+        console.log("✅ Copied index.html to 404.html");
       },
     },
-  },
+  ],
+  base: "/srch-s25/",
 });
