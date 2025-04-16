@@ -14,7 +14,7 @@
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
-import remarkGfm from "remark-gfm"
+import remarkGfm from "remark-gfm";
 import {
   Text,
   Heading,
@@ -26,6 +26,12 @@ import {
   Code,
   Button,
   Image,
+  Table,
+  Th,
+  Thead,
+  Tr,
+  Tbody,
+  Td
 } from "@chakra-ui/react";
 
 // Helper function to create consistent ID from heading text
@@ -343,6 +349,22 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
             {...props}
           />
         ),
+      table: (props) => (
+        <Box overflowX="auto" my={4}>
+          <Table variant="simple" {...props}>
+            {props.children}
+          </Table>
+        </Box>
+      ),
+      thead: (props) => <Thead {...props} />,
+      tbody: (props) => <Tbody {...props} />,
+      tr: (props) => <Tr {...props} />,
+      th: (props) => (
+        <Th border="1px solid" borderColor="gray.300" {...props} />
+      ),
+      td: (props) => (
+        <Td border="1px solid" borderColor="gray.300" {...props} />
+      ),
 
       // Images
       // img: (props) => {
