@@ -14,6 +14,7 @@
 import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm"
 import {
   Text,
   Heading,
@@ -385,7 +386,7 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
   // rehypeRaw helps handle HTML parsing
   return (
     <div>
-      <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]}>
+      <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
         {processedContent}
       </ReactMarkdown>
     </div>
