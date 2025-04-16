@@ -40,7 +40,8 @@ function createIdFromHeading(text) {
 
 // Helper to parse YAML frontmatter from markdown content
 function parseFrontmatter(content) {
-  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n/;
+  // Checks for --- CONTENT --- at the beginning of MD files, cross compatible w/ Windows chars
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;  
   const match = content.match(frontmatterRegex);
 
   if (!match) {
@@ -251,7 +252,9 @@ export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
 export const parseSubsections = (content) => {
   if (!content) return [];
 
-  const lines = content.split("\n");
+  // Get rid of Windows return character (\r)
+  const normalizedContent = content.replace(/\r/g, "");
+  const lines = normalizedContent.split("\n");
   const subsections = [];
 
   for (const line of lines) {
