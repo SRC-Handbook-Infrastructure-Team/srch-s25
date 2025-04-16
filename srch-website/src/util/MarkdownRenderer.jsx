@@ -267,9 +267,6 @@ export const parseSubsections = (content) => {
     }
   }
 
-  console.log(JSON.stringify(content));
-  console.log("SUBSECTIONS", subsections);
-
   return subsections;
 };
 
