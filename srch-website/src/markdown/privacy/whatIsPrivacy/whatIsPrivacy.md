@@ -1,7 +1,8 @@
 ---
-title: What is privacy?
+title: What Is Privacy?
 order: 1
 ---
+
 # What is privacy?
 
 Here we present some of the answers different thinkers and disciplines give to the question, “What is privacy about?” We do not aim to comprehensively survey theories or take sides in the many debates happening around this topic in philosophy, psychology, anthropology, and other disciplines. Rather, we offer several lenses through which to understand privacy and what it delineates. The goal is to get students thinking critically about privacy and its applications to computer science.
@@ -83,7 +84,7 @@ Privacy is relational and must be understood with respect to a certain person or
 
 “Consider the case of a couple having a quiet conversation in their home. While neither spouse has privacy with respect to the other and with regard to their feelings (assuming they are being honest), the couple have privacy with respect to the passersby who cannot hear or see them.” (Véliz 2024, 83)
 
-The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [nav:Value of Privacy](valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
+The things we want to keep private and how we want our privacy to be protected naturally vary depending on from whom we desire privacy. [nav:Value of Privacy](privacy/valueOfPrivacy) includes a number of case studies on circumstances in which privacy from certain entities promotes various individual and societal goods.
 
 ## Bibliography
 

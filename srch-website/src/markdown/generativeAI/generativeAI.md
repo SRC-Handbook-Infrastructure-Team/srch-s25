@@ -1,8 +1,10 @@
 ---
 title: Generative AI
-order: 5
+order: 3
 ---
 
 # Gen AI (MOCK)
 
 Lorem ipsum yay.
+
+## Second section

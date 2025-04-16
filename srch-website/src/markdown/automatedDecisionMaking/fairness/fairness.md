@@ -2,6 +2,7 @@
 title: Fairness
 order: 1
 ---
+
 # Algorithmic Fairness
 
 When machines replace humans in **[drawer:making high-impact decision](high-impact-decision)**, it is important for their outcomes to remain fair. But what is algorithmic fairness?
@@ -42,7 +43,7 @@ A notable insight is that the data distributions capture *different beliefs* abo
 
 While the selection of fairness criteria involves inevitable trade-offs, the ultimate decision is not purely mathematical but also political, since it decides who benefits and who suffers. 
 
-In fact, focusing solely on mathematically “fair” metrics can narrow our attention to isolated decision points, disconnected from broader social and political contexts in which these systems operate. This tendency leads us to conversations about **[nav:justice in automated decision-making](justice)**. 
+In fact, focusing solely on mathematically “fair” metrics can narrow our attention to isolated decision points, disconnected from broader social and political contexts in which these systems operate. This tendency leads us to conversations about **[nav:justice in automated decision-making](automatedDecisionMaking/justice)**. 
 
 ## Bibliography
 Bell, Andrew, Lucius Bynum, Nazarii Drushchak, Tetiana Zakharchenko, Lucas Rosenblatt, and Julia Stoyanovich. “The Possibility of Fairness: Revisiting the Impossibility Theorem in Practice.” In 2023 ACM Conference on Fairness, Accountability, and Transparency, 400–422. Chicago IL USA: ACM, 2023. https://doi.org/10.1145/3593013.3594007.

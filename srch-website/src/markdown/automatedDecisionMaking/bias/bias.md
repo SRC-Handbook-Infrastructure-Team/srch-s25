@@ -9,9 +9,9 @@ order: 3
 
 Bias is any **systemic process that discriminates against or favors a person or group over another based on stereotypical or inaccurate assumptions of the person or group**[^1]. Like people, algorithms are vulnerable to biases that make their decisions unfair[^2]. As automated-decision making systems (ADS) are increasingly embedded into day-to-day life, it is crucial to understand sources of bias in order to mitigate harms and enhance fairness. 
 
-## Sources of Bias in Automated-Decision Making Systems[^3]
+## Sources of Bias in Automated-Decision Making Systems
 
-We will organize sources of bias in ADS into two categories based on where they occur in the [drawer:ai dev life cycle](ai-dev-lifecycle). [drawer:Data generation](data-generation) is the first phase of the AI development lifecycle, where data is generated, measured, and collected from a sample population. **During the data generation phase, historical, representation, and measurement bias can occur.** [drawer:Model creation](model-creation) is the second phase of the AI development lifecycle, where an architecture is defined, weights are trained, and finally the model is deployed in real-world settings. **During model creation, learning, aggregation, evaluation, and deployment bias can occur.** Understanding each source of bias and how it is introduced into AI systems provides a starting point for measuring and mitigating bias.
+We will organize sources of bias in ADS into two categories based on where they occur in the [drawer:ai dev life cycle](ai-dev-lifecycle). [drawer:Data generation](data-generation) is the first phase of the AI development lifecycle, where data is generated, measured, and collected from a sample population. **During the data generation phase, historical, representation, and measurement bias can occur.** [drawer:Model creation](model-creation) is the second phase of the AI development lifecycle, where an architecture is defined, weights are trained, and finally the model is deployed in real-world settings. **During model creation, learning, aggregation, evaluation, and deployment bias can occur.** Understanding each source of bias and how it is introduced into AI systems provides a starting point for measuring and mitigating bias.[^3]
 
 ### Bias in Data Generation 
 
