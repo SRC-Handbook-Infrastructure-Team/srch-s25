@@ -328,7 +328,19 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
 
       // Text elements
       p: (props) => <Text mb={3} {...props} />,
-      a: (props) => <Link color="blue.500" {...props} />,
+      a: (props) => {
+        const isExternal = props.href.startsWith("http://") || props.href.startsWith("https://");
+        return (
+          <Link
+            color="blue.500"
+            href={props.href}
+            isExternal={isExternal}
+            target={isExternal ? "_blank" : undefined} // Open in a new tab if external
+            {...props}
+          />
+        )
+        
+      },
 
       // Lists
       ul: (props) => <UnorderedList pl={4} mb={3} {...props} />,
