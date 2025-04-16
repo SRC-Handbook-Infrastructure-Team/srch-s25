@@ -69,11 +69,11 @@ A somewhat recent development in our thinking on privacy comes from Cynthia Dwor
 
 #### Figure: Table summarizing four views of privacy. 
 | Privacy is about… | Someone has privacy if… |
-|----------|----------|
-| Access restriction   | Their physical self and information about them is inaccessible to others   |
-|Information flow control  |They are empowered to control if and how information about them is collected, shared, and used  |
-|The separation of public and private spheres|Their personal spaces, relationships, and actions are free from interference|
-|Plausible deniability | There is a mathematical guarantee their information or identity is unrecoverable|
+| - | - |
+| Access restriction | Their physical self and information about them is inaccessible to others |
+| Information flow control | They are empowered to control if and how information about them is collected, shared, and used |
+| The separation of public and private spheres | Their personal spaces, relationships, and actions are free from interference |
+| Plausible deniability | There is a mathematical guarantee their information or identity is unrecoverable |
 
 
 
