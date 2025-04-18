@@ -121,6 +121,9 @@ function AdditionalContributors() {
   const contributors = team
     .filter((member) => member.team == "additional")
     .sort((a, b) => a.name.localeCompare(b.name));
+  const facultyContributors = team
+    .filter((member) => member.team == "additional_faculty")
+    .sort((a, b) => a.name.localeCompare(b.name));
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading>Additional Contributors</Heading>
@@ -145,6 +148,11 @@ function AdditionalContributors() {
         Thank you to everyone who advised our research teams! Your feedback has
         been immensely valuable as we develop and refine our primers! ...
       </Text>
+      {facultyContributors.map((member) => (
+        <Text key={member.id}>
+          {member.name}, <i>{member.position}</i>
+        </Text>
+      ))}
     </div>
   );
 }
