@@ -75,7 +75,7 @@ Individuals’ perceptions of procedurally just encounters are based on four cen
 their interactions with any decision-maker, whether that be a legal authority, corporate system,\r
 community institution, or an algorithm: **neutrality**, **respect**, **voice**, and **trustworthiness**.\r
 \r
-![Procedural Justice Graphic](/assets/primer-photos/yls_procedural_justice.png)\r
+![Procedural Justice Graphic](/srch-s25/assets/primer-photos/yls_procedural_justice.png)\r
 _Figure from Yale Law School representing the four pillars of procedural justice._\r
 \r
 When considering the role of algorithms as automated decision-makers capable of making\r
