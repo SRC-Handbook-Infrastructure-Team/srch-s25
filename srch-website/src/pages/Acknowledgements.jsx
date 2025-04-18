@@ -104,12 +104,12 @@ function Team({ teamName }) {
       </Heading>
       <Divider my={4} borderColor="gray.300" />{" "}
       <Heading as="h2" size="lg" fontWeight="normal">
-        Current Team Members
+        {/* Current Team */}
       </Heading>
       <TeamGrid filteredTeam={isActive} />
       {notActive.length > 0 && (
         <>
-          <Heading as="h2" size="lg" fontWeight="normal">
+          <Heading as="h2" size="lg" fontWeight="normal" paddingTop={5}>
             Past Team Members
           </Heading>
           <TeamGrid filteredTeam={notActive} />
@@ -131,10 +131,10 @@ function AdditionalContributors() {
       <Heading>Additional Contributors</Heading>
       <Divider my={4} borderColor="gray.300" />{" "}
       <Heading as="h2" size="lg" fontWeight="normal" my={4}>
-        User Studies
+        User Study Participants
       </Heading>
       <Text my={4}>
-        Thank you to everyone who participated in our user studies! Your
+        Thank you to all the Socially Responsible Computing Teaching Assistants (STAs) who participated in our user studies! Your
         feedback has been immensely valuable as we work towards improving our
         content and design!
       </Text>
@@ -148,7 +148,7 @@ function AdditionalContributors() {
       </Heading>
       <Text my={4}>
         Thank you to everyone who advised our research teams! Your feedback has
-        been immensely valuable as we develop and refine our primers! ...
+        been immensely valuable as we develop and refine our primers!
       </Text>
       {facultyContributors.map((member) => (
         <Text key={member.id}>
