@@ -31,8 +31,12 @@ import {
   Thead,
   Tr,
   Tbody,
-  Td
+  Td,
+  HStack,
+  Icon,
 } from "@chakra-ui/react";
+import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { BsFileEarmarkText } from "react-icons/bs";
 
 // Helper function to create consistent ID from heading text
 function createIdFromHeading(text) {
@@ -48,7 +52,7 @@ function createIdFromHeading(text) {
 // Helper to parse YAML frontmatter from markdown content
 function parseFrontmatter(content) {
   // Checks for --- CONTENT --- at the beginning of MD files, cross compatible w/ Windows chars
-  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;  
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
   const match = content.match(frontmatterRegex);
 
   if (!match) {
@@ -124,6 +128,7 @@ export const getSections = async () => {
               cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
+            final: frontmatter.final,
           });
         }
       }
@@ -176,6 +181,7 @@ export const getSubsections = async (sectionId) => {
               cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
+            final: frontmatter.final,
           });
         }
       }
@@ -200,8 +206,9 @@ export const getContent = async (sectionId, subsectionId) => {
         if (filePath.endsWith(path.slice(2))) {
           // Remove the leading ..
           const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent } = parseFrontmatter(content);
-          return cleanContent;
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+          return { content: cleanContent, frontmatter };
         }
       }
     }
@@ -214,8 +221,9 @@ export const getContent = async (sectionId, subsectionId) => {
         if (filePath.endsWith(path.slice(2))) {
           // Remove the leading ..
           const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent } = parseFrontmatter(content);
-          return cleanContent;
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+          return { content: cleanContent, frontmatter };
         }
       }
     }
@@ -240,8 +248,9 @@ export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
       if (path.endsWith(drawerPath.slice(2))) {
         // Remove the leading ..
         const content = await allMarkdownFiles[path]();
-        const { content: cleanContent } = parseFrontmatter(content);
-        return cleanContent;
+        const { content: cleanContent, frontmatter } =
+          parseFrontmatter(content);
+        return { content: cleanContent, frontmatter };
       }
     }
 
@@ -259,8 +268,13 @@ export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
 export const parseSubsections = (content) => {
   if (!content) return [];
 
+  // Handle case where content might be an object with content property
+  const contentStr = typeof content === "string" ? content : content.content;
+
+  if (!contentStr) return [];
+
   // Get rid of Windows return character (\r)
-  const normalizedContent = content.replace(/\r/g, "");
+  const normalizedContent = contentStr.replace(/\r/g, "");
   const lines = normalizedContent.split("\n");
   const subsections = [];
 
@@ -278,7 +292,7 @@ export const parseSubsections = (content) => {
 };
 
 // Process markdown content and render it
-function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
+function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
   // Process special links in the content
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -302,11 +316,36 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
     return processed;
   }, [content]);
 
+  // Beta Tag Component
+  const BetaTag = () => (
+    <Box
+      display="inline-flex"
+      alignItems="center"
+      justifyContent="center"
+      bg="blue.100"
+      color="blue.700"
+      fontWeight="bold"
+      fontSize="xs"
+      px={2}
+      py={0.5}
+      borderRadius="md"
+      ml={2}
+      verticalAlign="middle"
+    >
+      BETA
+    </Box>
+  );
+
   // Define component rendering for Markdown elements
   const components = useMemo(
     () => ({
       // Headings
-      h1: (props) => <Heading as="h1" size="xl" mt={5} mb={3} {...props} />,
+      h1: (props) => (
+        <Heading as="h1" size="xl" mt={5} mb={3} {...props}>
+          {props.children}
+          {isFinal === false && <BetaTag />}
+        </Heading>
+      ),
       h2: (props) => {
         // Create an ID from the heading for anchor links - use the same ID generation
         // as in parseSubsections to ensure they match exactly
@@ -329,17 +368,22 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
       // Text elements
       p: (props) => <Text mb={3} {...props} />,
       a: (props) => {
-        const isExternal = props.href.startsWith("http://") || props.href.startsWith("https://");
+        const isExternal =
+          props.href.startsWith("http://") || props.href.startsWith("https://");
         return (
           <Link
-            color="blue.500"
+            color="blue.400"
             href={props.href}
             isExternal={isExternal}
-            target={isExternal ? "_blank" : undefined} // Open in a new tab if external
+            target={isExternal ? "_blank" : undefined}
             {...props}
-          />
-        )
-        
+          >
+            {props.children}
+            {isExternal && (
+              <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
+            )}
+          </Link>
+        );
       },
 
       // Lists
@@ -391,39 +435,59 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
         const text = node.properties?.text;
         const target = node.properties?.target;
         return (
-          <Button
-            colorScheme="blue"
-            size="sm"
+          <HStack
+            as="span"
+            spacing={1}
+            display="inline-flex"
+            alignItems="center"
+            _hover={{ color: "purple.500", cursor: "pointer" }}
             onClick={() => onDrawerOpen && onDrawerOpen(target)}
-            mx={1}
+            color="blue.400"
           >
-            {text}
-          </Button>
+            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
+            <Icon
+              as={InfoIcon}
+              boxSize="0.8em"
+              style={{ fill: "currentColor" }}
+            />
+          </HStack>
         );
       },
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
         return (
-          <Button
-            colorScheme="teal"
-            size="sm"
+          <HStack
+            as="span"
+            spacing={1}
+            display="inline-flex"
+            alignItems="center"
+            _hover={{ color: "purple.500", cursor: "pointer" }}
             onClick={() => onNavigation && onNavigation(target)}
-            mx={1}
+            color="blue.400"
           >
-            {text}
-          </Button>
+            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
+            <Icon
+              as={BsFileEarmarkText}
+              boxSize="0.8em"
+              style={{ fill: "currentColor" }}
+            />
+          </HStack>
         );
       },
     }),
-    [onDrawerOpen, onNavigation]
+    [onDrawerOpen, onNavigation, isFinal]
   );
 
   // Return ReactMarkdown component as specified.
   // rehypeRaw helps handle HTML parsing
   return (
     <div>
-      <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+      <ReactMarkdown
+        components={components}
+        rehypePlugins={[rehypeRaw]}
+        remarkPlugins={[remarkGfm]}
+      >
         {processedContent}
       </ReactMarkdown>
     </div>
