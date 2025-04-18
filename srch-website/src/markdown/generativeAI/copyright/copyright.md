@@ -1,6 +1,7 @@
 ---
 title: Introduction to Copyright and Generative AI
-order: 1
+order: 3
+final: false
 ---
 
 # Introduction to Copyright and Generative AI

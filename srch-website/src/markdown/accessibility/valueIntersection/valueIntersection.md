@@ -1,6 +1,7 @@
 ---
 title: Intersections with Other Core Values
 order: 2
+final: false
 ---
 
 # Intersections with Other Core Values

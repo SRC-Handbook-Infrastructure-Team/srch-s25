@@ -1,6 +1,7 @@
 ---
 title: Sources of Bias
 order: 3
+final: false
 ---
 
 # Sources of Bias in Automated-Decision Making Systems

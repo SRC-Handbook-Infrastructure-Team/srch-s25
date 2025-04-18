@@ -1,6 +1,7 @@
 ---
 title: Accessibility Biases
 order: 4
+final: false
 ---
 
 # The Importance of Recognizing Biases

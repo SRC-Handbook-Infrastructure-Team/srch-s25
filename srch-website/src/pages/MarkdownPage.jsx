@@ -30,6 +30,7 @@ function MarkdownPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
+  const [contentFinal, setContentFinal] = useState(undefined);
 
   // Drawer resize state
   const [drawerWidth, setDrawerWidth] = useState(() => {
@@ -68,16 +69,17 @@ function MarkdownPage() {
 
       // If section but no subsection specified
       if (sectionId && !subsectionId) {
-        const content = await getContent(sectionId);
+        const result = await getContent(sectionId);
 
-        if (content) {
-          setMainContent(content);
+        if (result) {
+          setMainContent(result.content);
+          setContentFinal(result.frontmatter?.final);
 
           // Preload subsections in case we need them
           const subsections = await getSubsections(sectionId);
 
           // If no specific section content or it's very minimal, redirect to first subsection
-          if (!content.trim() || content.trim().length < 50) {
+          if (!result.content.trim() || result.content.trim().length < 50) {
             if (subsections.length > 0) {
               navigate(`/${sectionId}/${subsections[0].id}`);
             }
@@ -102,9 +104,10 @@ function MarkdownPage() {
 
       // If both section and subsection specified
       if (sectionId && subsectionId) {
-        const content = await getContent(sectionId, subsectionId);
-        if (content) {
-          setMainContent(content);
+        const result = await getContent(sectionId, subsectionId);
+        if (result) {
+          setMainContent(result.content);
+          setContentFinal(result.frontmatter?.final);
         } else {
           // If subsection not found, show toast error and stay on the current page
           toast({
@@ -143,11 +146,12 @@ function MarkdownPage() {
 
         if (targetSubsectionId) {
           // Check if the section and subsection exist
-          contentExists =
-            (await getContent(targetSectionId, targetSubsectionId)) !== null;
+          const result = await getContent(targetSectionId, targetSubsectionId);
+          contentExists = result !== null;
         } else {
           // Check if just the section exists
-          contentExists = (await getContent(targetSectionId)) !== null;
+          const result = await getContent(targetSectionId);
+          contentExists = result !== null;
         }
 
         if (contentExists) {
@@ -193,9 +197,9 @@ function MarkdownPage() {
   function handleDrawerOpen(targetId) {
     // Load drawer content for the current section/subsection
     if (sectionId && subsectionId) {
-      getDrawerFile(sectionId, subsectionId, targetId).then((content) => {
-        if (content) {
-          setDrawerContent(content);
+      getDrawerFile(sectionId, subsectionId, targetId).then((result) => {
+        if (result) {
+          setDrawerContent(result.content);
           setIsDrawerOpen(true);
         } else {
           // Show error toast for missing drawer content
@@ -326,6 +330,7 @@ function MarkdownPage() {
           content={mainContent}
           onDrawerOpen={handleDrawerOpen}
           onNavigation={handleNavigation}
+          isFinal={contentFinal}
         />
       )}
 

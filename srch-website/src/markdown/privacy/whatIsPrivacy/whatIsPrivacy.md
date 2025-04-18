@@ -1,6 +1,7 @@
 ---
 title: What Is Privacy?
 order: 1
+final: true
 ---
 
 # What is privacy?

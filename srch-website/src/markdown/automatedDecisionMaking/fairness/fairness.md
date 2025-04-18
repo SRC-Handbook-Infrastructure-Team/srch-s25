@@ -1,6 +1,7 @@
 ---
 title: Algorithmic Fairness
 order: 1
+final: false
 ---
 
 # Algorithmic Fairness

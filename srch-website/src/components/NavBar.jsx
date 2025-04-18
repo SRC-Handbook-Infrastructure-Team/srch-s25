@@ -25,6 +25,26 @@ import {
   getContent,
 } from "../util/MarkdownRenderer";
 
+// Beta Tag Component
+const BetaTag = () => (
+  <Box
+    display="inline-flex"
+    alignItems="center"
+    justifyContent="center"
+    bg="blue.100"
+    color="blue.700"
+    fontWeight="bold"
+    fontSize="xs"
+    px={2}
+    py={0.5}
+    borderRadius="md"
+    ml={2}
+    verticalAlign="middle"
+  >
+    BETA
+  </Box>
+);
+
 function NavBar() {
   const location = useLocation();
   const currPath = location.pathname;
@@ -90,12 +110,12 @@ function NavBar() {
 
         // If we're viewing a subsection, load its content headings
         if (currentSectionId && currentSubsectionId) {
-          const content = await getContent(
+          const result = await getContent(
             currentSectionId,
             currentSubsectionId
           );
-          if (content) {
-            const headings = parseSubsections(content);
+          if (result && result.content) {
+            const headings = parseSubsections(result.content);
             setContentHeadings({
               [`${currentSectionId}/${currentSubsectionId}`]: headings,
             });
@@ -139,6 +159,7 @@ function NavBar() {
     }
   };
 
+  // Navigation content with BETA tags
   const NavContent = () => (
     <VStack align="stretch" spacing={2}>
       <Link to="/">
@@ -168,7 +189,10 @@ function NavBar() {
               alignItems="center"
             >
               <Link to={`/${section.id}`}>
-                <Text fontWeight="medium">{section.title}</Text>
+                <Box display="flex" alignItems="center">
+                  <Text fontWeight="medium">{section.title}</Text>
+                  {section.final === false && <BetaTag />}
+                </Box>
               </Link>
 
               {/* Only show expand/collapse icon if section has subsections */}
@@ -196,14 +220,17 @@ function NavBar() {
                     <Box key={subsection.id}>
                       {/* Subsection link */}
                       <Link to={`/${section.id}/${subsection.id}`}>
-                        <Text
-                          fontSize="sm"
-                          p={1}
-                          fontWeight={isSubsectionActive ? "bold" : "normal"}
-                          color={isSubsectionActive ? "blue.500" : "inherit"}
-                        >
-                          {subsection.title}
-                        </Text>
+                        <Box display="flex" alignItems="center">
+                          <Text
+                            fontSize="sm"
+                            p={1}
+                            fontWeight={isSubsectionActive ? "bold" : "normal"}
+                            color={isSubsectionActive ? "blue.500" : "inherit"}
+                          >
+                            {subsection.title}
+                          </Text>
+                          {subsection.final === false && <BetaTag />}
+                        </Box>
                       </Link>
 
                       {/* Content headings */}

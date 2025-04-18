@@ -128,6 +128,7 @@ export const getSections = async () => {
               cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
+            final: frontmatter.final,
           });
         }
       }
@@ -180,6 +181,7 @@ export const getSubsections = async (sectionId) => {
               cleanContent.split("\n")[0].replace("# ", ""),
             order: frontmatter.order || 999,
             content: cleanContent,
+            final: frontmatter.final,
           });
         }
       }
@@ -204,8 +206,9 @@ export const getContent = async (sectionId, subsectionId) => {
         if (filePath.endsWith(path.slice(2))) {
           // Remove the leading ..
           const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent } = parseFrontmatter(content);
-          return cleanContent;
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+          return { content: cleanContent, frontmatter };
         }
       }
     }
@@ -218,8 +221,9 @@ export const getContent = async (sectionId, subsectionId) => {
         if (filePath.endsWith(path.slice(2))) {
           // Remove the leading ..
           const content = await allMarkdownFiles[filePath]();
-          const { content: cleanContent } = parseFrontmatter(content);
-          return cleanContent;
+          const { content: cleanContent, frontmatter } =
+            parseFrontmatter(content);
+          return { content: cleanContent, frontmatter };
         }
       }
     }
@@ -244,8 +248,9 @@ export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
       if (path.endsWith(drawerPath.slice(2))) {
         // Remove the leading ..
         const content = await allMarkdownFiles[path]();
-        const { content: cleanContent } = parseFrontmatter(content);
-        return cleanContent;
+        const { content: cleanContent, frontmatter } =
+          parseFrontmatter(content);
+        return { content: cleanContent, frontmatter };
       }
     }
 
@@ -263,8 +268,13 @@ export const getDrawerFile = async (sectionId, subsectionId, fileId) => {
 export const parseSubsections = (content) => {
   if (!content) return [];
 
+  // Handle case where content might be an object with content property
+  const contentStr = typeof content === "string" ? content : content.content;
+
+  if (!contentStr) return [];
+
   // Get rid of Windows return character (\r)
-  const normalizedContent = content.replace(/\r/g, "");
+  const normalizedContent = contentStr.replace(/\r/g, "");
   const lines = normalizedContent.split("\n");
   const subsections = [];
 
@@ -282,7 +292,7 @@ export const parseSubsections = (content) => {
 };
 
 // Process markdown content and render it
-function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
+function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
   // Process special links in the content
   const processedContent = useMemo(() => {
     if (!content) return "";
@@ -306,11 +316,36 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
     return processed;
   }, [content]);
 
+  // Beta Tag Component
+  const BetaTag = () => (
+    <Box
+      display="inline-flex"
+      alignItems="center"
+      justifyContent="center"
+      bg="blue.100"
+      color="blue.700"
+      fontWeight="bold"
+      fontSize="xs"
+      px={2}
+      py={0.5}
+      borderRadius="md"
+      ml={2}
+      verticalAlign="middle"
+    >
+      BETA
+    </Box>
+  );
+
   // Define component rendering for Markdown elements
   const components = useMemo(
     () => ({
       // Headings
-      h1: (props) => <Heading as="h1" size="xl" mt={5} mb={3} {...props} />,
+      h1: (props) => (
+        <Heading as="h1" size="xl" mt={5} mb={3} {...props}>
+          {props.children}
+          {isFinal === false && <BetaTag />}
+        </Heading>
+      ),
       h2: (props) => {
         // Create an ID from the heading for anchor links - use the same ID generation
         // as in parseSubsections to ensure they match exactly
@@ -441,7 +476,7 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
         );
       },
     }),
-    [onDrawerOpen, onNavigation]
+    [onDrawerOpen, onNavigation, isFinal]
   );
 
   // Return ReactMarkdown component as specified.

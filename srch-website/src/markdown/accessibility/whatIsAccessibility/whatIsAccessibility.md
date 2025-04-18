@@ -1,6 +1,7 @@
 ---
 title: What is Accessibility?
 order: 1
+final: false
 ---
 
 # What is Accessibility?

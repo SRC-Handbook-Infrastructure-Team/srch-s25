@@ -1,6 +1,7 @@
 ---
 title: Concepts of Justice in AI
 order: 2
+final: false
 ---
 
 # Concepts of Justice in AI
