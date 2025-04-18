@@ -12,21 +12,21 @@ Designing technology solutions that ensure privacy, security, accessibility, and
 
 ## Case Studies
 
-### 1. [drawer:ASR vs. User Privacy](asr-privacy)
+#### 1. [drawer:ASR vs. User Privacy](asr-privacy)
 
 ---
 
-### 2. [drawer:CAPTCHA Tests vs. Security and Accessibility](captcha-accessibility)
+#### 2. [drawer:CAPTCHA Tests vs. Security and Accessibility](captcha-accessibility)
 
 ---
 
-### 3. [drawer:MFA vs. Accessibility](mfa-accessibility)
+#### 3. [drawer:MFA vs. Accessibility](mfa-accessibility)
 
 ---
 
-### 4. [drawer:Screen Readers vs. Privacy](screen-readers-privacy)
+#### 4. [drawer:Screen Readers vs. Privacy](screen-readers-privacy)
 
 ---
 
-### 5. [drawer:Document Accessibility vs. Privacy Protections](doc-accessibility-privacy)
+#### 5. [drawer:Document Accessibility vs. Privacy Protections](doc-accessibility-privacy)
 `;export{e as default};
