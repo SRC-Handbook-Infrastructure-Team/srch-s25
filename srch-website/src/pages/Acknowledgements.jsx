@@ -61,7 +61,8 @@ function TeamGrid({ filteredTeam }) {
             {member.position} | {member.pronouns}
           </Text>
           <Text fontSize="sm">
-            {member.degree}, {member.gradYear}
+            {member.degree && `${member.degree}, `}
+            {member.gradYear}
           </Text>
         </Box>
       ))}
@@ -77,7 +78,6 @@ function Acknowledgements() {
       <Heading as="h1" size="xl" mt={5} mb={3}>
         Acknowledgements
       </Heading>
-      <TeamGrid filteredTeam={onlyLeaders} />
     </div>
   );
 }
@@ -90,6 +90,7 @@ function Team({ teamName }) {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   const nameToTitleMap = {
+    leadership: "Leadership",
     ai: "AI",
     privacy: "Privacy",
     accessibility: "Accessibility",

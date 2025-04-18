@@ -23,7 +23,14 @@ function App() {
           <Route path="/:sectionId/:subsectionId" element={<MarkdownPage />} />
 
           {/* Acknowledgements paths */}
-          <Route path="/acknowledgements" element={<Acknowledgements />} />
+          <Route
+            path="/acknowledgements"
+            element={<Team teamName="leadership" />}
+          />
+          <Route
+            path="/acknowledgements/leadership"
+            element={<Team teamName="leadership" />}
+          />
           <Route path="/acknowledgements/ai" element={<Team teamName="ai" />} />
           <Route
             path="/acknowledgements/privacy"

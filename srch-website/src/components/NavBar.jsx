@@ -277,6 +277,11 @@ function NavBar() {
         </Link>
         {currPath.includes("acknowledgements") && (
           <VStack align="stretch" pl={4} mt={1} spacing={0}>
+            <Link to="/acknowledgements/leadership">
+              <Text fontSize="sm" p={1}>
+                Leadership Team
+              </Text>
+            </Link>
             <Link to="/acknowledgements/ai">
               <Text fontSize="sm" p={1}>
                 AI Team
