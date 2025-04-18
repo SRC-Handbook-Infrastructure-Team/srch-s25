@@ -131,6 +131,16 @@ function NavBar() {
     loadAllData();
   }, [currentSectionId, currentSubsectionId, navigate, hasFetchedData]);
 
+  // Auto-redirect from main section to first subsection
+  useEffect(() => {
+    if (currentSectionId && !currentSubsectionId) {
+      const sectionSubsections = subsections[currentSectionId];
+      if (sectionSubsections && sectionSubsections.length > 0) {
+        navigate(`/${currentSectionId}/${sectionSubsections[0].id}`);
+      }
+    }
+  }, [currentSectionId, currentSubsectionId, subsections, navigate]);
+
   // Handle expanding/collapsing a section
   const toggleSection = (sectionId, event) => {
     // Only handle the expand/collapse icon click
@@ -183,17 +193,24 @@ function NavBar() {
               borderRadius="md"
               bg={isActive && !currentSubsectionId ? "gray.100" : "transparent"}
               cursor="pointer"
-              onClick={(e) => toggleSection(section.id, e)}
+              onClick={(e) => {
+                // When clicking on section header, navigate to first subsection
+                const sectionSubsections = subsections[section.id];
+                if (sectionSubsections && sectionSubsections.length > 0) {
+                  navigate(`/${section.id}/${sectionSubsections[0].id}`);
+                } else {
+                  navigate(`/${section.id}`);
+                }
+                toggleSection(section.id, e);
+              }}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
             >
-              <Link to={`/${section.id}`}>
-                <Box display="flex" alignItems="center">
-                  <Text fontWeight="medium">{section.title}</Text>
-                  {section.final === false && <BetaTag />}
-                </Box>
-              </Link>
+              <Box display="flex" alignItems="center">
+                <Text fontWeight="medium">{section.title}</Text>
+                {section.final === false && <BetaTag />}
+              </Box>
 
               {/* Only show expand/collapse icon if section has subsections */}
               {hasSubsections && (
@@ -233,8 +250,8 @@ function NavBar() {
                         </Box>
                       </Link>
 
-                      {/* Content headings */}
-                      {isSubsectionActive && hasHeadings && (
+                      {/* Content headings - COMMENTED OUT TO HIDE SUBSECTION HEADINGS */}
+                      {/* {isSubsectionActive && hasHeadings && (
                         <VStack align="stretch" pl={4} mt={1} spacing={0}>
                           {contentHeadings[contentKey].map((heading) => (
                             <Link
@@ -261,7 +278,7 @@ function NavBar() {
                             </Link>
                           ))}
                         </VStack>
-                      )}
+                      )} */}
                     </Box>
                   );
                 })}

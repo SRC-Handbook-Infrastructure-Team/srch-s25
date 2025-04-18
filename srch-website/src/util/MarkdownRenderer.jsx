@@ -357,16 +357,21 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
             size="lg"
             mt={4}
             mb={2}
+            lineHeight="1.3"
             scrollMarginTop="20px" // Adds margin at top when scrolled to
             {...props}
           />
         );
       },
-      h3: (props) => <Heading as="h3" size="md" mt={3} mb={2} {...props} />,
-      h4: (props) => <Heading as="h4" size="sm" mt={2} mb={1} {...props} />,
+      h3: (props) => (
+        <Heading as="h3" size="md" mt={3} mb={2} lineHeight="1.3" {...props} />
+      ),
+      h4: (props) => (
+        <Heading as="h4" size="sm" mt={2} mb={1} lineHeight="1.3" {...props} />
+      ),
 
       // Text elements
-      p: (props) => <Text mb={3} {...props} />,
+      p: (props) => <Text mb={3} lineHeight="1.6" {...props} />,
       a: (props) => {
         const isExternal =
           props.href.startsWith("http://") || props.href.startsWith("https://");
@@ -423,12 +428,21 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
       ),
 
       // Images
-      // img: (props) => {
-      //   const src = props.src.startsWith("/src/assets/")
-      //     ? props.src
-      //     : `/src/assets/${props.src}`;
-      //   return <Image src={src} alt={props.alt || ""} my={4} maxW="100%" />;
-      // },
+      img: (props) => {
+        return (
+          <Image
+            src={props.src}
+            alt={props.alt || ""}
+            maxW="80%"
+            maxH="500px"
+            objectFit="contain"
+            borderRadius="md"
+            mx="auto"
+            my={6}
+            display="block"
+          />
+        );
+      },
 
       // Custom components for interactive elements
       "drawer-link": ({ node }) => {

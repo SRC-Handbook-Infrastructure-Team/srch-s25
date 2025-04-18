@@ -40,6 +40,7 @@ function TeamGrid({ filteredTeam }) {
             boxSize="250px" // Sets a fixed size for the image
             objectFit="cover" // Ensures the image is cropped proportionally
             borderRadius="lg"
+            mb={4}
           />
           <Flex align="center" gap={2} mb={2}>
             <Text fontWeight="bold">{member.name}</Text>
