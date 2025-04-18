@@ -38,15 +38,23 @@ These definitions of accessibility are just three conceptions amid an entire fie
 
 ## References
 
-1. Web Content Accessibility Guidelines, Level A Checklist, 1.2.1
-2. "Definition and Overview of Universal Design (UD)." Centre for Excellence in Universal Design. Accessed April 14, 2025. https://universaldesign.ie/about-universal-design/definition-and-overview
-3. "An Introduction to Digital Accessibility." Mass.gov. Accessed April 14, 2025. https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?
-4. Hamraie, Aimi, and Kelly Fritsch. "Crip technoscience manifesto." _Catalyst: Feminism, theory, technoscience_ 5, no. 1 (2019): p.4.
-5. "What Is Digital Equity?" Internet Society Foundation, June 26, 2023. https://www.isocfoundation.org/2023/06/what-is-digital-equity/
-6. Habitat, U. N. "Addressing the digital divide: Taking action towards digital inclusion." _United Nations Human Settlements Programme (UN-Habitat)._ Available at: https://unhabitat.org/sites/default/files/2021/11/addressing_the_digital_divide.pdf
-7. Meng, Divyam Raj. "India's Unified Payments Interface Has Revolutionized Its Digital Payments Market." Cornell SC Johnson College of Business, December 20, 2024. https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/
-8. Ganti, Akhilesh. "Unified Payments Interface (UPI)." Investopedia, March 7, 2024. https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp
-9. Broverman, Neal. "Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That's Unacceptable." Mashable, February 23, 2025. https://mashable.com/article/black-girls-who-code-representation
+Web Content Accessibility Guidelines, Level A Checklist, 1.2.1
+
+"Definition and Overview of Universal Design (UD)." Centre for Excellence in Universal Design. Accessed April 14, 2025. https://universaldesign.ie/about-universal-design/definition-and-overview
+
+"An Introduction to Digital Accessibility." Mass.gov. Accessed April 14, 2025. https://www.mass.gov/info-details/an-introduction-to-digital-accessibility#what-is-digital-accessibility?
+
+Hamraie, Aimi, and Kelly Fritsch. "Crip technoscience manifesto." _Catalyst: Feminism, theory, technoscience_ 5, no. 1 (2019): p.4.
+
+"What Is Digital Equity?" Internet Society Foundation, June 26, 2023. https://www.isocfoundation.org/2023/06/what-is-digital-equity/
+
+Habitat, U. N. "Addressing the digital divide: Taking action towards digital inclusion." _United Nations Human Settlements Programme (UN-Habitat)._ Available at: https://unhabitat.org/sites/default/files/2021/11/addressing_the_digital_divide.pdf
+
+Meng, Divyam Raj. "India's Unified Payments Interface Has Revolutionized Its Digital Payments Market." Cornell SC Johnson College of Business, December 20, 2024. https://business.cornell.edu/hub/2024/12/20/indias-unified-payments-interface-has-revolutionized-its-digital-payments-market/
+
+Ganti, Akhilesh. "Unified Payments Interface (UPI)." Investopedia, March 7, 2024. https://www.investopedia.com/terms/u/unified-payment-interface-upi.asp
+
+Broverman, Neal. "Only 2% of Tech Jobs Are Held by Black Women. Cristina Mancini Knows That's Unacceptable." Mashable, February 23, 2025. https://mashable.com/article/black-girls-who-code-representation
 
 [^1]: Web Content Accessibility Guidelines, Level A Checklist, 1.2.1.
 [^2]: "Definition and Overview of Universal Design (UD),", Centre for Excellence in Universal Design, accessed April 14, 2025, https://universaldesign.ie/about-universal-design/definition-and-overview.
