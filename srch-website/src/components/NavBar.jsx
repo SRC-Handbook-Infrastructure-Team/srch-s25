@@ -16,7 +16,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { parseSubsections } from '../util/MarkdownRenderer';
+import { parseSubsections } from "../util/MarkdownRenderer";
 import { GiHamburgerMenu } from "react-icons/gi";
 import {
   getSections,
@@ -25,13 +25,12 @@ import {
   getContent,
 } from "../util/MarkdownRenderer";
 
-
 function NavBar() {
   const location = useLocation();
   const currPath = location.pathname;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isMobile] = useMediaQuery("(max-width: 768px)");
-  
+
   const navigate = useNavigate();
   const currentPath = location.pathname;
   const pathParts = currentPath.split("/").filter(Boolean);
@@ -317,9 +316,9 @@ function NavBar() {
       p={4}
       zIndex={10}
     >
-      <NavContent/>
+      <NavContent />
     </Box>
-  )
+  );
 }
 
 export default NavBar;

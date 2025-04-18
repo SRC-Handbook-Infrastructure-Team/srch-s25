@@ -1,5 +1,5 @@
 import { MdEmail } from "react-icons/md";
-import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa"
+import { FaLinkedin, FaExternalLinkAlt } from "react-icons/fa";
 import {
   Text,
   Heading,
@@ -9,7 +9,7 @@ import {
   Box,
   Image,
   Divider,
-  useMediaQuery
+  useMediaQuery,
 } from "@chakra-ui/react";
 import team from "../team.json";
 
@@ -31,7 +31,11 @@ function TeamGrid({ filteredTeam }) {
           p={2}
         >
           <Image
-            src={member.photo ? `/srch-s25/src/assets/member-photos/${member.photo}` : `/srch-s25/src/assets/member-photos/temp-photo.jpg`}
+            src={
+              member.photo
+                ? `/srch-s25/src/assets/member-photos/${member.photo}`
+                : `/srch-s25/src/assets/member-photos/temp-photo.jpg`
+            }
             alt={member.photo || "Default photo"}
             boxSize="250px" // Sets a fixed size for the image
             objectFit="cover" // Ensures the image is cropped proportionally
@@ -71,9 +75,8 @@ function Acknowledgements() {
   return (
     <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       <Heading as="h1" size="xl" mt={5} mb={3}>
-        Acknowledgements 
+        Acknowledgements
       </Heading>
-      <Text>Thank you to our wonderful project coordinators!</Text>
       <TeamGrid filteredTeam={onlyLeaders} />
     </div>
   );
@@ -114,10 +117,10 @@ function Team({ teamName }) {
   );
 }
 
-function AdditionalContributors(){
-  const contributors = team.filter((member) => member.team == "additional").sort((a, b) =>
-    a.name.localeCompare(b.name)
-  )
+function AdditionalContributors() {
+  const contributors = team
+    .filter((member) => member.team == "additional")
+    .sort((a, b) => a.name.localeCompare(b.name));
   return (
     <div style={{ padding: "20px", marginLeft: "250px" }}>
       <Heading>Additional Contributors</Heading>
@@ -128,7 +131,7 @@ function AdditionalContributors(){
       <Text my={4}>
         Thank you to everyone who participated in our user studies! Your
         feedback has been immensely valuable as we work towards improving our
-        content and design! ...
+        content and design!
       </Text>
       {contributors.map((member) => (
         <Text key={member.id}>

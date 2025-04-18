@@ -31,8 +31,12 @@ import {
   Thead,
   Tr,
   Tbody,
-  Td
+  Td,
+  HStack,
+  Icon,
 } from "@chakra-ui/react";
+import { InfoIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { BsFileEarmarkText } from "react-icons/bs";
 
 // Helper function to create consistent ID from heading text
 function createIdFromHeading(text) {
@@ -48,7 +52,7 @@ function createIdFromHeading(text) {
 // Helper to parse YAML frontmatter from markdown content
 function parseFrontmatter(content) {
   // Checks for --- CONTENT --- at the beginning of MD files, cross compatible w/ Windows chars
-  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;  
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
   const match = content.match(frontmatterRegex);
 
   if (!match) {
@@ -329,17 +333,22 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
       // Text elements
       p: (props) => <Text mb={3} {...props} />,
       a: (props) => {
-        const isExternal = props.href.startsWith("http://") || props.href.startsWith("https://");
+        const isExternal =
+          props.href.startsWith("http://") || props.href.startsWith("https://");
         return (
           <Link
-            color="blue.500"
+            color="blue.400"
             href={props.href}
             isExternal={isExternal}
-            target={isExternal ? "_blank" : undefined} // Open in a new tab if external
+            target={isExternal ? "_blank" : undefined}
             {...props}
-          />
-        )
-        
+          >
+            {props.children}
+            {isExternal && (
+              <Icon as={ExternalLinkIcon} ml={1} boxSize="0.8em" />
+            )}
+          </Link>
+        );
       },
 
       // Lists
@@ -391,28 +400,44 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
         const text = node.properties?.text;
         const target = node.properties?.target;
         return (
-          <Button
-            colorScheme="blue"
-            size="sm"
+          <HStack
+            as="span"
+            spacing={1}
+            display="inline-flex"
+            alignItems="center"
+            _hover={{ color: "purple.500", cursor: "pointer" }}
             onClick={() => onDrawerOpen && onDrawerOpen(target)}
-            mx={1}
+            color="blue.400"
           >
-            {text}
-          </Button>
+            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
+            <Icon
+              as={InfoIcon}
+              boxSize="0.8em"
+              style={{ fill: "currentColor" }}
+            />
+          </HStack>
         );
       },
       "nav-link": ({ node }) => {
         const text = node.properties?.text;
         const target = node.properties?.target;
         return (
-          <Button
-            colorScheme="teal"
-            size="sm"
+          <HStack
+            as="span"
+            spacing={1}
+            display="inline-flex"
+            alignItems="center"
+            _hover={{ color: "purple.500", cursor: "pointer" }}
             onClick={() => onNavigation && onNavigation(target)}
-            mx={1}
+            color="blue.400"
           >
-            {text}
-          </Button>
+            <Link _hover={{ textDecoration: "underline" }}>{text}</Link>
+            <Icon
+              as={BsFileEarmarkText}
+              boxSize="0.8em"
+              style={{ fill: "currentColor" }}
+            />
+          </HStack>
         );
       },
     }),
@@ -423,7 +448,11 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation }) {
   // rehypeRaw helps handle HTML parsing
   return (
     <div>
-      <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+      <ReactMarkdown
+        components={components}
+        rehypePlugins={[rehypeRaw]}
+        remarkPlugins={[remarkGfm]}
+      >
         {processedContent}
       </ReactMarkdown>
     </div>

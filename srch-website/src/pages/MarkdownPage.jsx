@@ -1,7 +1,21 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Drawer, DrawerBody, DrawerHeader, DrawerContent, DrawerCloseButton, useMediaQuery, useToast } from '@chakra-ui/react';
-import MarkdownRenderer, {  getSections, getDrawerFile, getContent, getSubsections } from '../util/MarkdownRenderer';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerContent,
+  DrawerCloseButton,
+  useMediaQuery,
+  useToast,
+  Box,
+} from "@chakra-ui/react";
+import MarkdownRenderer, {
+  getSections,
+  getDrawerFile,
+  getContent,
+  getSubsections,
+} from "../util/MarkdownRenderer";
 
 function MarkdownPage() {
   // Get parameters from URL and location for hash
@@ -16,6 +30,19 @@ function MarkdownPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [previousPath, setPreviousPath] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Drawer resize state
+  const [drawerWidth, setDrawerWidth] = useState(() => {
+    try {
+      const savedWidth = localStorage.getItem("drawerWidth");
+      return savedWidth ? parseInt(savedWidth) : 400; // Default width if not found
+    } catch (error) {
+      console.error("Error reading from localStorage:", error);
+      return 400; // Default width on error
+    }
+  });
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef(null);
 
   // Store the current valid path whenever content loads successfully
   useEffect(() => {
@@ -233,8 +260,66 @@ function MarkdownPage() {
     return () => clearTimeout(timer);
   }, [mainContent, location.hash]); // Respond to both content changes and hash changes
 
+  // Handle drawer resize functionality
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(true);
+
+    // Record initial mouse position and drawer width
+    resizeRef.current = {
+      startX: e.clientX,
+      startWidth: drawerWidth,
+    };
+
+    // Add cursor styling to entire document during resize
+    document.body.style.cursor = "ew-resize";
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isResizing || !resizeRef.current) return;
+
+      // Calculate new width based on mouse movement
+      // For a right drawer, dragging left (negative delta) should increase width
+      const deltaX = e.clientX - resizeRef.current.startX;
+      // Since the drawer is on the right, moving mouse left (negative deltaX) makes drawer wider
+      const newWidth = Math.max(
+        300,
+        Math.min(800, resizeRef.current.startWidth - deltaX)
+      );
+
+      setDrawerWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      if (isResizing) {
+        setIsResizing(false);
+        document.body.style.cursor = "";
+
+        // Save width to localStorage when done resizing
+        try {
+          localStorage.setItem("drawerWidth", drawerWidth.toString());
+        } catch (error) {
+          console.error("Error saving to localStorage:", error);
+        }
+      }
+    };
+
+    if (isResizing) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+    };
+  }, [isResizing, drawerWidth]);
+
   return (
-    <div style={{ padding: '20px', marginLeft: isMobile ? '0' : '250px' }}>
+    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
       {/* Main content */}
       {mainContent && (
         <MarkdownRenderer
@@ -249,10 +334,33 @@ function MarkdownPage() {
         isOpen={isDrawerOpen}
         placement="right"
         onClose={() => setIsDrawerOpen(false)}
+        blockScrollOnMount={false}
+        trapFocus={false}
       >
-        <DrawerContent>
+        <DrawerContent
+          sx={{ width: `${drawerWidth}px !important` }}
+          maxWidth="80vw"
+          position="relative"
+        >
           <DrawerCloseButton />
-          <DrawerHeader>Additional Information</DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">
+            Additional Information
+          </DrawerHeader>
+
+          {/* Resize handle */}
+          <Box
+            position="absolute"
+            left="0"
+            top="0"
+            bottom="0"
+            width="6px"
+            cursor="ew-resize"
+            bgColor={isResizing ? "blue.400" : "transparent"}
+            _hover={{ bgColor: "blue.200" }}
+            onMouseDown={handleMouseDown}
+            zIndex="999"
+          />
+
           <DrawerBody>
             <MarkdownRenderer
               content={drawerContent}

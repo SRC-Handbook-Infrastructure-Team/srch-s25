@@ -1,5 +1,5 @@
 ---
-title: Justice
+title: Concepts of Justice in AI
 order: 2
 ---
 
@@ -75,7 +75,7 @@ their interactions with any decision-maker, whether that be a legal authority, c
 community institution, or an algorithm: **neutrality**, **respect**, **voice**, and **trustworthiness**.
 
 ![Procedural Justice Graphic](/srch-s25/src/assets/primer-photos/yls_procedural_justice.png)
-*Figure from Yale Law School representing the four pillars of procedural justice.*
+_Figure from Yale Law School representing the four pillars of procedural justice._
 
 When considering the role of algorithms as automated decision-makers capable of making
 authoritative decisions, these core features of procedural justice remain relevant.
@@ -210,19 +210,19 @@ local contexts, particularly when:
 
 ## References
 
-- Angwin, Julia, Jeff Larson, Surya Mattu, and Lauren Kirchner. “Machine Bias.” *ProPublica*, May 23, 2016. https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing.
-- Appel, Ruth E. “Strengthening AI Accountability Through Better Third Party Evaluations.” *Stanford Institute for Human-Centered Artificial Intelligence*, November 6, 2024. https://hai.stanford.edu/news/strengthening-ai-accountability-through-better-third-party-evaluations.
-- Barocas, Solon, and Andrew D. Selbst. “Big Data’s Disparate Impact.” *California Law Review* 104, no. 3 (2016): 671–732. https://dx.doi.org/10.2139/ssrn.2477899.
-- Bukoski, Michael. “Moral Uncertainty and Distributive Sufficiency.” *Ethical Theory and Moral Practice* 24, no. 4 (2021): 949+. https://link.gale.com/apps/doc/A683675865/AONE?u=anon~671d731&sid=googleScholar&xid=9f3ccaee.
-- Buolamwini, Joy, dir. *Coded Bias* [Film]. 7th Empire Media, 2020.
-- Elford, Gideon. “Equality of Opportunity.” In *The Stanford Encyclopedia of Philosophy*, Fall 2023 Edition, edited by Edward N. Zalta and Uri Nodelman. https://plato.stanford.edu/archives/fall2023/entries/equal-opportunity/.
-- Goodman, Ellen P., and Julia Tréhu. “AI Audit-Washing and Accountability.” *German Marshall Fund of the United States*, November 2022. https://www.gmfus.org/news/ai-audit-washing-and-accountability.
-- Holtug, Nils. “Prioritarianism.” In *Oxford Research Encyclopedia of Politics*. Oxford University Press, 2017. https://doi.org/10.1093/acrefore/9780190228637.013.232.
-- Kaufman, Alexander. “Distributive Justice, Theories of.” In *Encyclopedia of Applied Ethics* (Second Edition), edited by Ruth Chadwick, 842–850. Academic Press, 2012. https://doi.org/10.1016/B978-0-12-373932-2.00227-1.
-- Kroll, Joshua A., Joanna Huey, Solon Barocas, Edward W. Felten, Joel R. Reidenberg, David G. Robinson, and Harlan Yu. “Accountable Algorithms.” *University of Pennsylvania Law Review* 165, no. 3 (2017): 633–705. https://scholarship.law.upenn.edu/penn_law_review/vol165/iss3/3/.
-- RAND Corporation. "Bayesian Improved Surname Geocoding (BISG)." *RAND Health Care*. Accessed April 14, 2025. https://www.rand.org/health-care/tools-methods/bisg.html.
+- Angwin, Julia, Jeff Larson, Surya Mattu, and Lauren Kirchner. “Machine Bias.” _ProPublica_, May 23, 2016. https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing.
+- Appel, Ruth E. “Strengthening AI Accountability Through Better Third Party Evaluations.” _Stanford Institute for Human-Centered Artificial Intelligence_, November 6, 2024. https://hai.stanford.edu/news/strengthening-ai-accountability-through-better-third-party-evaluations.
+- Barocas, Solon, and Andrew D. Selbst. “Big Data’s Disparate Impact.” _California Law Review_ 104, no. 3 (2016): 671–732. https://dx.doi.org/10.2139/ssrn.2477899.
+- Bukoski, Michael. “Moral Uncertainty and Distributive Sufficiency.” _Ethical Theory and Moral Practice_ 24, no. 4 (2021): 949+. https://link.gale.com/apps/doc/A683675865/AONE?u=anon~671d731&sid=googleScholar&xid=9f3ccaee.
+- Buolamwini, Joy, dir. _Coded Bias_ [Film]. 7th Empire Media, 2020.
+- Elford, Gideon. “Equality of Opportunity.” In _The Stanford Encyclopedia of Philosophy_, Fall 2023 Edition, edited by Edward N. Zalta and Uri Nodelman. https://plato.stanford.edu/archives/fall2023/entries/equal-opportunity/.
+- Goodman, Ellen P., and Julia Tréhu. “AI Audit-Washing and Accountability.” _German Marshall Fund of the United States_, November 2022. https://www.gmfus.org/news/ai-audit-washing-and-accountability.
+- Holtug, Nils. “Prioritarianism.” In _Oxford Research Encyclopedia of Politics_. Oxford University Press, 2017. https://doi.org/10.1093/acrefore/9780190228637.013.232.
+- Kaufman, Alexander. “Distributive Justice, Theories of.” In _Encyclopedia of Applied Ethics_ (Second Edition), edited by Ruth Chadwick, 842–850. Academic Press, 2012. https://doi.org/10.1016/B978-0-12-373932-2.00227-1.
+- Kroll, Joshua A., Joanna Huey, Solon Barocas, Edward W. Felten, Joel R. Reidenberg, David G. Robinson, and Harlan Yu. “Accountable Algorithms.” _University of Pennsylvania Law Review_ 165, no. 3 (2017): 633–705. https://scholarship.law.upenn.edu/penn_law_review/vol165/iss3/3/.
+- RAND Corporation. "Bayesian Improved Surname Geocoding (BISG)." _RAND Health Care_. Accessed April 14, 2025. https://www.rand.org/health-care/tools-methods/bisg.html.
 - Stanford Law School. “Bias in Large Language Models and Who Should Be Held Accountable.” Accessed April 14, 2025. https://law.stanford.edu/press/bias-in-large-language-models-and-who-should-be-held-accountable/.
-- Stern, Carly. “LA Thinks AI Could Help Decide Which Homeless People Get Scarce Housing – and Which Don’t.” *Vox*, December 6, 2024. https://www.vox.com/the-highlight/388372/housing-policy-los-angeles-homeless-ai.
-- University of Oxford. *How AI Is Improving Outcomes for Resettled Refugees: The Annie™ MOORE Project*. 2022. https://www.economics.ox.ac.uk/annie-moore-increasing-employment-of-resettled-refugees-using-matching-machine-learning-and-integer.
+- Stern, Carly. “LA Thinks AI Could Help Decide Which Homeless People Get Scarce Housing – and Which Don’t.” _Vox_, December 6, 2024. https://www.vox.com/the-highlight/388372/housing-policy-los-angeles-homeless-ai.
+- University of Oxford. _How AI Is Improving Outcomes for Resettled Refugees: The Annie™ MOORE Project_. 2022. https://www.economics.ox.ac.uk/annie-moore-increasing-employment-of-resettled-refugees-using-matching-machine-learning-and-integer.
 - Yale Law School. “Procedural Justice in Legal Processes.” Accessed April 14, 2025. https://law.yale.edu/justice-collaboratory/procedural-justice.
-- Zou, James, and Londa Schiebinger. “AI Can Be Sexist and Racist—It’s Time to Make It Fair.” *Nature* 559, no. 7714 (2018): 324–326. https://doi.org/10.1038/d41586-018-05707-8.
+- Zou, James, and Londa Schiebinger. “AI Can Be Sexist and Racist—It’s Time to Make It Fair.” _Nature_ 559, no. 7714 (2018): 324–326. https://doi.org/10.1038/d41586-018-05707-8.

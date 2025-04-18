@@ -13,6 +13,32 @@
     "active": "true"
   },
   {
+    "name": "Suresh Venkatasubramanian",
+    "email": "suresh@brown.edu",
+    "pronouns": "he/him",
+    "position": "Faculty Advisor",
+    "team": "N/A",
+    "gradYear": "",
+    "degree": "",
+    "linkedin": "",
+    "website": "",
+    "photo": "suresh.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Julia Netter",
+    "email": "julia_netter@brown.edu",
+    "pronouns": "she/her",
+    "position": "Faculty Advisor",
+    "team": "N/A",
+    "gradYear": "",
+    "degree": "",
+    "linkedin": "",
+    "website": "",
+    "photo": "julia.jpg",
+    "active": "true"
+  },
+  {
     "name": "Connor Flick",
     "email": "connor_flick@brown.edu",
     "pronouns": "he/him",
@@ -233,6 +259,7 @@
     "photo": "tenzin.jpg",
     "active": "true"
   },
+
   {
     "name": "Huda Abdulrasool",
     "email": "huda_abdulrasool@brown.edu",
@@ -270,6 +297,20 @@
     "linkedin": "https://www.linkedin.com/in/jmgk",
     "website": "",
     "photo": "jo.jpg",
+    "active": "true"
+  },
+
+  {
+    "name": "A.J. Shulman",
+    "email": "aj_shulman@brown.edu",
+    "pronouns": "he/him",
+    "position": "Product Developer",
+    "team": "product",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in Computational Neuroscience & Computer Science",
+    "linkedin": "https://www.linkedin.com/in/ajshul/",
+    "website": "",
+    "photo": "aj.jpeg",
     "active": "true"
   },
   {
