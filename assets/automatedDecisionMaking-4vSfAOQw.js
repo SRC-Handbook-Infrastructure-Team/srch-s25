@@ -1,6 +1,7 @@
 const n=`---
 title: Automated Decision Making
 order: 2
+final: false
 ---
 
 # Automated Decision Making (MOCK)
