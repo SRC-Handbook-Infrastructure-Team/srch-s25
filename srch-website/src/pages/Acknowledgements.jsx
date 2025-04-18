@@ -134,9 +134,9 @@ function AdditionalContributors() {
         User Study Participants
       </Heading>
       <Text my={4}>
-        Thank you to all the Socially Responsible Computing Teaching Assistants (STAs) who participated in our user studies! Your
+        Thank you to all the Socially Responsible Computing Teaching Assistants (STAs) who participated in our user studies. Your
         feedback has been immensely valuable as we work towards improving our
-        content and design!
+        content and design. Below is a list of all the user study participants who consented to be attributed in our website:
       </Text>
       {contributors.map((member) => (
         <Text key={member.id}>
@@ -144,11 +144,10 @@ function AdditionalContributors() {
         </Text>
       ))}
       <Heading as="h2" size="lg" fontWeight="normal" my={4}>
-        Advisors
+        Research Advisors
       </Heading>
       <Text my={4}>
-        Thank you to everyone who advised our research teams! Your feedback has
-        been immensely valuable as we develop and refine our primers!
+        Thank you to all the faculty and Ph.D. students who advised our research teams:
       </Text>
       {facultyContributors.map((member) => (
         <Text key={member.id}>
