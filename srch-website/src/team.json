@@ -117,6 +117,32 @@
     "active": "true"
   },
   {
+    "name": "Emma Huang",
+    "email": "emma_b_huang@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Member",
+    "team": "ai",
+    "gradYear": "2025",
+    "degree": "Undergraduate Student in Computer Science & International and Public Affairs",
+    "linkedin": "https://www.linkedin.com/in/emma-huang-9989a1215/",
+    "website": "",
+    "photo": "emma.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Selena Williams",
+    "email": "selena_williams@brown.edu",
+    "pronouns": "she/her/hers",
+    "position": "Team Member",
+    "team": "ai",
+    "gradYear": "2025",
+    "degree": "Undergraduate Student in Computer Science",
+    "linkedin": "https://www.linkedin.com/in/selena-joet-williams/",
+    "website": "",
+    "photo": "selena.jpg",
+    "active": "true"
+  },
+  {
     "name": "Tiffany Tran",
     "email": "tiffany_m_tran@brown.edu",
     "pronouns": "she/her",
@@ -230,7 +256,33 @@
     "degree": "MPH Student in Causal Inference Epidemiology",
     "linkedin": "",
     "website": "",
-    "photo": "",
+    "photo": "peyton.jpg",
+    "active": "true"
+  },
+  {
+    "name": "Ethan Schenker",
+    "email": "ethan_schenker@brown.edu",
+    "pronouns": "he/him",
+    "position": "Primer Research & Development",
+    "team": "privacy",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in International and Public Affairs & Economics",
+    "linkedin": "",
+    "website": "",
+    "photo": "ethan.jpg",
+    "active": "false"
+  },
+  {
+    "name": "Sana Saab",
+    "email": "sana_saab@brown.edu",
+    "pronouns": "she/her",
+    "position": "Team Member",
+    "team": "product",
+    "gradYear": "2027",
+    "degree": "Undergraduate Student in Computer Science & English",
+    "linkedin": "https://www.linkedin.com/in/sana-saab-571659255/",
+    "website": "",
+    "photo": "sana.jpg",
     "active": "true"
   },
   {
@@ -325,5 +377,44 @@
     "website": "",
     "photo": "joe.jpg",
     "active": "true"
+  },
+  {
+    "name": "Deborah Hurley",
+    "email": "",
+    "pronouns": "",
+    "position": "Professor of the Practice of Computer Science",
+    "team": "additional_faculty",
+    "gradYear": "",
+    "degree": "",
+    "linkedin": "",
+    "website": "",
+    "photo": "",
+    "active": ""
+  },
+  {
+    "name": "Kinan Dak Albab",
+    "email": "",
+    "pronouns": "",
+    "position": "Computer Science PhD Candidate",
+    "team": "additional_faculty",
+    "gradYear": "",
+    "degree": "",
+    "linkedin": "",
+    "website": "",
+    "photo": "",
+    "active": ""
+  },
+  {
+    "name": "Timothy H Edgar",
+    "email": "",
+    "pronouns": "",
+    "position": "Professor of the Practice of Computer Science",
+    "team": "additional_faculty",
+    "gradYear": "",
+    "degree": "",
+    "linkedin": "",
+    "website": "",
+    "photo": "",
+    "active": ""
   }
 ]
