@@ -50,7 +50,7 @@ This can occur in two ways:
 
 [drawer:Differential Measurement Case Study: The Impact Of Over Policing On Recidivism Scores](measurement-bias-differential-measurement-case-study)
 
-![Summary of bias in the data generation pipeline](/srch-s25/src/assets/primer-photos/dataGenerationBias.png)  
+![Summary of bias in the data generation pipeline](/srch-s25/public/assets/primer-photos/dataGenerationBias.png)  
 Figure 1: Bias in Data Generation (Suresh et al.)
 
 ### Bias in Model Creation
@@ -81,7 +81,7 @@ Figure 1: Bias in Data Generation (Suresh et al.)
 
 [drawer:Deployment Bias Case Study: Using Recidivism Tools Off-Label](deployment-bias-case-study)
 
-![Bias in model creation pipeline](/srch-s25/src/assets/primer-photos/modelCreationBias.png)  
+![Bias in model creation pipeline](/srch-s25/public/assets/primer-photos/modelCreationBias.png)  
 Figure 2: Bias in Model Creation (Suresh et al.)
 
 ## Impact of Bias
