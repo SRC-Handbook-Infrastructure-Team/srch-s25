@@ -120,6 +120,7 @@ function Team({ teamName }) {
 }
 
 function AdditionalContributors() {
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
   const contributors = team
     .filter((member) => member.team == "additional")
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -127,10 +128,10 @@ function AdditionalContributors() {
     .filter((member) => member.team == "additional_faculty")
     .sort((a, b) => a.name.localeCompare(b.name));
   return (
-    <div style={{ padding: "20px", marginLeft: "250px" }}>
-      <Heading>Additional Contributors</Heading>
+    <div style={{ padding: "20px", marginLeft: isMobile ? "0px" : "250px"}}>
+      <Heading as="h1" size="xl" mt={5} mb={3}>Additional Contributors</Heading>
       <Divider my={4} borderColor="gray.300" />{" "}
-      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
+      <Heading as="h2" size="lg" fontWeight="normal">
         User Study Participants
       </Heading>
       <Text my={4}>
