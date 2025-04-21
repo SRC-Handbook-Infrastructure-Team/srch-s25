@@ -104,12 +104,12 @@ function Team({ teamName }) {
       </Heading>
       <Divider my={4} borderColor="gray.300" />{" "}
       <Heading as="h2" size="lg" fontWeight="normal">
-        {/* Current Team */}
+        Current Team Members
       </Heading>
       <TeamGrid filteredTeam={isActive} />
       {notActive.length > 0 && (
         <>
-          <Heading as="h2" size="lg" fontWeight="normal" paddingTop={5}>
+          <Heading as="h2" size="lg" fontWeight="normal">
             Past Team Members
           </Heading>
           <TeamGrid filteredTeam={notActive} />
@@ -120,24 +120,26 @@ function Team({ teamName }) {
 }
 
 function AdditionalContributors() {
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
   const contributors = team
     .filter((member) => member.team == "additional")
     .sort((a, b) => a.name.localeCompare(b.name));
   const facultyContributors = team
     .filter((member) => member.team == "additional_faculty")
     .sort((a, b) => a.name.localeCompare(b.name));
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
   return (
-    <div style={{ padding: "20px", marginLeft: isMobile ? "0px" : "250px"}}>
-      <Heading as="h1" size="xl" mt={5} mb={3}>Additional Contributors</Heading>
+    <div style={{ padding: "20px", marginLeft: isMobile ? "0" : "250px" }}>
+      <Heading as="h1" size="xl" mt={5} mb={3}>
+        Additional Contributors
+      </Heading>
       <Divider my={4} borderColor="gray.300" />{" "}
-      <Heading as="h2" size="lg" fontWeight="normal">
-        User Study Participants
+      <Heading as="h2" size="lg" fontWeight="normal" my={4}>
+        User Studies
       </Heading>
       <Text my={4}>
-        Thank you to all the Socially Responsible Computing Teaching Assistants (STAs) who participated in our user studies. Your
+        Thank you to everyone who participated in our user studies! Your
         feedback has been immensely valuable as we work towards improving our
-        content and design. Below is a list of all the user study participants who consented to be attributed in our website:
+        content and design!
       </Text>
       {contributors.map((member) => (
         <Text key={member.id}>
@@ -145,10 +147,11 @@ function AdditionalContributors() {
         </Text>
       ))}
       <Heading as="h2" size="lg" fontWeight="normal" my={4}>
-        Research Advisors
+        Advisors
       </Heading>
       <Text my={4}>
-        Thank you to all the faculty and Ph.D. students who advised our research teams:
+        Thank you to everyone who advised our research teams! Your feedback has
+        been immensely valuable as we develop and refine our primers! ...
       </Text>
       {facultyContributors.map((member) => (
         <Text key={member.id}>

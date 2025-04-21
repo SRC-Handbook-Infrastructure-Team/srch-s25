@@ -354,7 +354,7 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
           <Heading
             as="h2"
             id={id}
-            size="lg"
+            size="md"
             mt={4}
             mb={2}
             lineHeight="1.3"
@@ -364,7 +364,7 @@ function MarkdownRenderer({ content, onDrawerOpen, onNavigation, isFinal }) {
         );
       },
       h3: (props) => (
-        <Heading as="h3" size="md" mt={3} mb={2} lineHeight="1.3" {...props} />
+        <Heading as="h3" size="sm" mt={3} mb={2} lineHeight="1.3" {...props} />
       ),
       h4: (props) => (
         <Heading as="h4" size="sm" mt={2} mb={1} lineHeight="1.3" {...props} />
